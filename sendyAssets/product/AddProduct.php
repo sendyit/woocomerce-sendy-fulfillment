@@ -3,7 +3,7 @@
 //function to add products
 
 function AddProduct($default_data, $data, $url, $product_details_url) {
-    //echo $url;
+
     $add_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
@@ -21,8 +21,7 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     }
     ]
     }';
-    // echo '<pre>' . $add_product_data . '</pre>';
-    // echo 'adding product';
+
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_POST, true);
@@ -37,14 +36,11 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     $resp = curl_exec($curl);
     // curl_close($curl);
     $resp_json = json_decode($resp);
-    //echo $resp;
-    //var_dump($resp_json);
+
     if ($resp_json->message == 'Product added successfully') {
 
       $response_data = $resp_json->data;
-      //var_dump($response_data);
 
- //get the variant_id for this order
 
  $product_variant_id = getVariantId($default_data, $response_data->productId, $product_details_url);
 

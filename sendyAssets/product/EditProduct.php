@@ -1,26 +1,6 @@
 <?php
 
-//function to edit products
 
-/**{
-  "api_username": "B-XGS-0000",
-  "api_key": "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJwYXlsb2FkIjp7ImVycm9ycyI6e30sImRhdGEiOnsibG9naW5fc3VjY2VzcyI6dHJ1ZSwiYnVzaW5lc3MiOnsiYnVzaW5lc3NfZW1haWwiOiJsZXdpc0BzZW5keWl0LmNvbSIsImJ1c2luZXNzX2lkIjoiQi1YR1MtMTU0MiIsInVzZXJfaWQiOiJVLUxTSC01MDg2IiwiYnVzaW5lc3NfbmFtZSI6IlNrd29kaSBMdGQifX0sIm1lc3NhZ2UiOiJidXNpbmVzcy5zaWdudXAuc3VjY2VzcyJ9LCJzdGF0dXMiOnRydWV9",
-  "product_name": "Pen",
-  "product_id": "P-KXG-0000",
-  "product_description": "Ball point pen",
-  "product_variants": [
-    {
-      "product_variant_id": "PV-DUH-1182",
-      "product_variant_description": "Fortified Cup",
-      "product_variant_currency": "KES",
-      "product_variant_unit_price": 400,
-      "product_variant_quantity": 30,
-      "product_variant_quantity_type": "KILOGRAM",
-      "product_variant_image_link": "https://sendy-partner-docs.s3-eu-west-1.amazonaws.com/fulfillment_products/B-000-1111_1658029476953.jpeg",
-      "product_variant_expiry_date": 123456789
-    }
-  ]
-} */
 
 function EditProduct($default_data, $data, $url) {
     //echo $url;
