@@ -9,7 +9,9 @@ Class FulfillmentProduct {
 
         include 'product/AddProduct.php';
         include 'product/EditProduct.php';
+        include 'product/ArchiveProduct.php';
 
+//get these details from db
         $this->default_data['apiKey'] = 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE';
         $this->default_data['apiusername'] = 'B-XGS-1542';
         $this->default_data['default_quantity'] = 100;
@@ -58,7 +60,9 @@ Class FulfillmentProduct {
         $response = EditProduct($this->default_data, $data,$url);
         return $response;
     }
-    public function delete() {
-        echo 'editing product';
+    public function archive($data) {
+      $url = $this->get_link('product-status');
+      $response = ArchiveProduct($this->default_data, $data,$url);
+      return $response;
     }
 }
