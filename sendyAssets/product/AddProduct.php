@@ -2,7 +2,7 @@
 
 //function to add products
 
-function AddProduct($default_data, $data, $url) {
+function AddProduct($default_data, $data, $url, $product_details_url) {
     //echo $url;
     $add_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
@@ -40,8 +40,66 @@ function AddProduct($default_data, $data, $url) {
     //echo $resp;
     //var_dump($resp_json);
     if ($resp_json->message == 'Product added successfully') {
-        return ($resp_json->data);
+
+      $response_data = $resp_json->data;
+      //var_dump($response_data);
+
+ //get the variant_id for this order
+
+ $product_variant_id = getVariantId($default_data, $response_data->productId, $product_details_url);
+
+ $response_data_final['product_id'] = $response_data->productId;
+ $response_data_final['product_variant_id'] = $product_variant_id;
+
+        return $response_data_final;
     } else {
         return ($resp_json->message);
     }
+}
+
+
+function getVariantId($default_data, $product_id, $url){
+
+
+
+
+  //echo $url;
+  $add_product_data = '{
+  "api_username": "' . $default_data['apiusername'] . '",
+  "api_key": "' . $default_data['apiKey'] . '",
+  "product_id": "' . $product_id . '"
+  }';
+  // echo '<pre>' . $add_product_data . '</pre>';
+  // echo 'adding product';
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_POST, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $headers = array("Accept: application/json", "Content-Type: application/json",);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+  $data = $add_product_data;
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+  //for debug only!
+  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+  $resp = curl_exec($curl);
+  // curl_close($curl);
+
+  //echo '<br><br>response '.$resp;
+  $resp_json = json_decode($resp);
+
+  if($resp_json->message == 'Product details fetched successfully'){
+
+    return $resp_json->data->product_variants[0]->product_variant_id;
+  }else{
+
+    return 'not found';
+  }
+
+
+
+
+
+
+
 }

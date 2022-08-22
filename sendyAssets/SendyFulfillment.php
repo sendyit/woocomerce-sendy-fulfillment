@@ -12,7 +12,7 @@ Class FulfillmentProduct {
         $this->default_data['environment'] = 'testing';
         $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
         $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
-        
+
     }
     function get_link($append) {
         if ($this->default_data['environment'] == 'live') {
@@ -32,20 +32,21 @@ Class FulfillmentProduct {
         }
     }
 
-   
+
 
     public function add($data) {
-    
+
         include 'product/AddProduct.php';
         $url = $this->get_link('add-product');
-        $response = Addproduct($this->default_data, $data,$url); 
+        $product_details_url = $this->get_link('product-details');
+        $response = Addproduct($this->default_data, $data,$url, $product_details_url);
         return $response;
 }
     public function edit($data) {
-        
+
         include 'product/EditProduct.php';
         $url = $this->get_link('edit-product');
-        $response = EditProduct($this->default_data, $data,$url); 
+        $response = EditProduct($this->default_data, $data,$url);
         return $response;
     }
     public function delete() {
