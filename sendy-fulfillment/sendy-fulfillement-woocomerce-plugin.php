@@ -39,3 +39,5 @@ function deactivate_sendy_fulfillment()
 
 register_activation_hook(__FILE__, 'activate_sendy_fulfillment');
 register_deactivation_hook(__FILE__, 'deactivate_sendy_fulfillment');
+
+require plugin_dir_path(__FILE__) . 'includes/class-sendy-fulfillment.php';
