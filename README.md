@@ -23,4 +23,5 @@ This plugin allows you to automate the processes of consigning and delivering wi
  - Activate and setup the plugin
  
   ![alt text](https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin/-/blob/master/assets/images/activate-plugin.png?raw=true "Activate Plugin")
+  ![alt text](https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin/-/blob/master/assets/images/activate-plugin.png "Activate Plugin")
 
