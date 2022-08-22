@@ -2,8 +2,14 @@
 Class FulfillmentProduct {
     // Properties
 
+
+
     public $default_data;
     function __construct() {
+
+        include 'product/AddProduct.php';
+        include 'product/EditProduct.php';
+
         $this->default_data['apiKey'] = 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE';
         $this->default_data['apiusername'] = 'B-XGS-1542';
         $this->default_data['default_quantity'] = 100;
@@ -12,8 +18,11 @@ Class FulfillmentProduct {
         $this->default_data['environment'] = 'testing';
         $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
         $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
-        
+
     }
+
+
+
     function get_link($append) {
         if ($this->default_data['environment'] == 'live') {
             return $this->default_data['live_api_link'] . '/' . $append;
@@ -32,20 +41,21 @@ Class FulfillmentProduct {
         }
     }
 
-   
+
 
     public function add($data) {
-    
-        include 'product/AddProduct.php';
+
+
         $url = $this->get_link('add-product');
-        $response = Addproduct($this->default_data, $data,$url); 
+        $product_details_url = $this->get_link('product-details');
+        $response = Addproduct($this->default_data, $data,$url, $product_details_url);
         return $response;
 }
     public function edit($data) {
-        
-        include 'product/EditProduct.php';
+
+
         $url = $this->get_link('edit-product');
-        $response = EditProduct($this->default_data, $data,$url); 
+        $response = EditProduct($this->default_data, $data,$url);
         return $response;
     }
     public function delete() {
