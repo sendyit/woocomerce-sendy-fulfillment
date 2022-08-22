@@ -22,5 +22,5 @@ This plugin allows you to automate the processes of consigning and delivering wi
  - On your wordpress Admin, click on 'Plugins/Add New' and search for Sendy Fulfillment Plugin.
  - Activate and setup the plugin
  
-  ![alt text](https://raw.githubusercontent.com/sendyit/woocommerce/master/sendy-fulfillement-woocomerce-plugin/assets/images/activate-plugin.png)
+  ![alt text](https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin/-/blob/master/assets/images/activate-plugin.png)
 
