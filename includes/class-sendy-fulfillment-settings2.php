@@ -13,16 +13,24 @@ function my_cool_plugin_create_menu() {
 
 
 function register_my_cool_plugin_settings() {
+
 	//register our settings
 	register_setting( 'my-cool-plugin-settings-group', 'new_option_name' );
 	register_setting( 'my-cool-plugin-settings-group', 'some_other_option' );
 	register_setting( 'my-cool-plugin-settings-group', 'option_etc' );
+
+
+
+  //register our settings-1
+  register_setting( 'my-cool-plugin-settings-group-1', 'new_option_name-1' );
+  register_setting( 'my-cool-plugin-settings-group-1', 'some_other_option-1' );
+  register_setting( 'my-cool-plugin-settings-group-1', 'option_etc-1' );
 }
 
 function my_cool_plugin_settings_page() {
 ?>
 <div class="wrap">
-<h1>Your Plugin Name</h1>
+<h1>Your Plugin Name tab 1</h1>
 
 <form method="post" action="options.php">
     <?php settings_fields( 'my-cool-plugin-settings-group' ); ?>
@@ -47,5 +55,37 @@ function my_cool_plugin_settings_page() {
     <?php submit_button(); ?>
 
 </form>
+
+
+
+
+
+<h1>Your Plugin Name tab2</h1>
+
+<form method="post" action="options.php">
+    <?php settings_fields( 'my-cool-plugin-settings-group-1' ); ?>
+    <?php do_settings_sections( 'my-cool-plugin-settings-group-1' ); ?>
+    <table class="form-table">
+        <tr valign="top">
+        <th scope="row">New Option Name</th>
+        <td><input type="text" name="new_option_name-1" value="<?php echo esc_attr( get_option('new_option_name-1') ); ?>" /></td>
+        </tr>
+
+        <tr valign="top">
+        <th scope="row">Some Other Option</th>
+        <td><input type="text" name="some_other_option-1" value="<?php echo esc_attr( get_option('some_other_option-1') ); ?>" /></td>
+        </tr>
+
+        <tr valign="top">
+        <th scope="row">Options, Etc.</th>
+        <td><input type="text" name="option_etc-1" value="<?php echo esc_attr( get_option('option_etc-1') ); ?>" /></td>
+        </tr>
+    </table>
+
+    <?php submit_button(); ?>
+
+</form>
+
+
 </div>
 <?php } ?>
