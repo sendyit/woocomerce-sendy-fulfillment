@@ -135,7 +135,6 @@ function product_archive($post_id) {
     $results = $wpdb->get_results( "SELECT 
     products.ID as id
     FROM {$wpdb->posts} products 
-    join {$wpdb->posts} images on images.post_parent = products.ID 
     where products.ID = $post_id");
     $response = [];
     $productsArray = [];
@@ -145,6 +144,7 @@ function product_archive($post_id) {
         $row->product_id = $synced[count($synced) - 1]->meta_value;
         $array = (array) $row;
         $product_id = $products->archive($array);
+        add_post_meta( $post_id, "test_archive", $product_id, false );
         array_push($response, $product_id);
     }
 }
