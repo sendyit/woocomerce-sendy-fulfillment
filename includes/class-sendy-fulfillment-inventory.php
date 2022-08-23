@@ -81,6 +81,13 @@ function product_sync () {
     }
 }
 
+if(isset($_POST['syncAllProducts']))
+{
+   if(product_sync()){
+     echo "<script>alert('Product synced successfully')</script>";
+    }
+}
+
 function product_add ($post_id) {
     $products = new FulfillmentProduct();
     global $wpdb;
