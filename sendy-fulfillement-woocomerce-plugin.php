@@ -1,21 +1,21 @@
 <?php
- 
+
 /*
- 
+
 Plugin Name: Sendy Fulfillment
- 
+
 Plugin URI: https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin
- 
+
 Description: Plugin to allow automation of consignment and delivery with Sendy Fulfillment.
- 
+
 Version: 1.0.0
- 
+
 Author: Merchant Engineers
- 
+
 License: GPLv2 or later
- 
+
 Text Domain: sendy-fulfillment
- 
+
 */
 
 // If this file is called directly, abort.
@@ -42,6 +42,7 @@ register_deactivation_hook(__FILE__, 'deactivate_sendy_fulfillment');
 
 require plugin_dir_path(__FILE__) . 'includes/class-sendy-fulfillment.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-settings.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-settings2.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-inventory.php';
 
 
