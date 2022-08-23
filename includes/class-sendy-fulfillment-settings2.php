@@ -71,7 +71,7 @@ function my_cool_plugin_settings_page()
 
 .sendy-synch-now{ padding: 20px;}
 
-.description-reason{ display: inline; margin-left: 40px; color:#2271b1;}
+.description-reason{ display: inline; margin-left: 30px; color:grey; font-style:italic;}
 
 </style>
 
@@ -80,7 +80,7 @@ function my_cool_plugin_settings_page()
 
 
 
-<div> hallo </div>
+<div>  </div>
 
     <?php
     if (isset($_GET))
@@ -105,22 +105,22 @@ function my_cool_plugin_settings_page()
             <?php do_settings_sections('plugin-api-settings'); ?>
             <table class="form-table">
                 <tr valign="top">
-                <th scope="row">API Key</th>
+                <td style="width:100px;" scope="row">API Key</td>
                 <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_key" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_key')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
-                <th scope="row">API Username</th>
+                <td scope="row">API Username</td>
                 <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_username" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
-                <th scope="row">Environment</th>
+                <td scope="row">Environment</td>
                 <td>
                     <?php
                         $options = get_option( 'sendy_fulfillment_environment' );
                     ?>
-                    <select name='sendy_fulfillment_environment'>
+                    <select class="sendy-custom-input" name='sendy_fulfillment_environment'>
                         <option value='Test' <?php selected( $options, 'Test' ); ?>>Test</option>
                         <option value='Live' <?php selected( $options, 'Live' ); ?>>Live</option>
                     </select>
@@ -131,11 +131,15 @@ function my_cool_plugin_settings_page()
             <?php submit_button(); ?>
 
         </form>
+
+        <hr>
+        <p class="sendy-synch-now"> more info on how to signup at sendy fulfullment. </p>
             <?php
     }
     elseif ($active_tab == 'inventory')
     { ?>
                 <h1>Inventory Settings</h1>
+                <div class="sendy-top-message"> info on how this works </div>
 
 
 <form method="post" action="options.php">
@@ -143,34 +147,34 @@ function my_cool_plugin_settings_page()
     <?php do_settings_sections('inventory-settings'); ?>
     <table class="form-table">
         <tr valign="top">
-        <th scope="row">Sync Products On Change</th>
+        <td style="width:200px;" scope="row">Sync Products On Change</td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_sync_products_on_add' );
         $html = '<input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
-        <div class="description-reason"> When actiavted orders will atomatically synch when changed </div>
+        <div class="description-reason"> More explanation on this variable </div>
         </td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Default Currency</th>
+        <td scope="row">Default Currency</td>
         <td>
                     <?php
                         $options = get_option( 'sendy_fulfillment_default_currency' );
                     ?>
-                    <select name='sendy_fulfillment_default_currency'>
+                    <select class="sendy-custom-input" name='sendy_fulfillment_default_currency'>
                         <option value='KES' <?php selected( $options, 'KES' ); ?>>KES</option>
                     </select>
                 </td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Default Quantity Type</th>
+        <td scope="row">Default Quantity Type</td>
         <td>
                     <?php
                         $options = get_option( 'sendy_fulfillment_default_quantity_type' );
                     ?>
-                    <select name='sendy_fulfillment_default_quantity_type'>
+                    <select name='sendy_fulfillment_default_quantity_type' class="sendy-custom-input">
                         <option value='KILOGRAM' <?php selected( $options, 'KILOGRAM' ); ?>>KILOGRAM</option>
                         <option value='GRAM' <?php selected( $options, 'GRAM' ); ?>>GRAM</option>
                         <option value='LITRE' <?php selected( $options, 'LITRE' ); ?>>LITRE</option>
@@ -180,7 +184,7 @@ function my_cool_plugin_settings_page()
         </tr>
 
         <tr valign="top">
-        <th scope="row">Default Quantity</th>
+        <td scope="row">Default Quantity</td>
         <td><input type="text" class="sendy-custom-input" name="sendy_fulfillment_default_quantity" value="<?php echo esc_attr(get_option('sendy_fulfillment_default_quantity')); ?>" /></td>
         </tr>
     </table>
@@ -205,37 +209,42 @@ function my_cool_plugin_settings_page()
     <?php do_settings_sections('order-settings'); ?>
     <table class="form-table">
         <tr valign="top">
-        <th scope="row">Place Order On Fulfillment</th>
+        <td style="width:200px;" scope="row">Place Order On Fulfillment </td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );
         $html = '<input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
+        <div class="description-reason"> More explanation on this variable </div>
         </td>
         </tr>
 
-        <tr valign="top">
-        <th scope="row">Delivery Info</th>
-        <td><?php
-        $options = get_option( 'sendy_fulfillment_delivery_info' );
-        $html = '<textarea id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
-        echo $html;?>
-        </td>
-        </tr>
+
 
         <tr valign="top">
-        <th scope="row">Include Tracking Link & Status</th>
+        <td scope="row">Include Tracking Link & Status</td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_include_tracking' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
+        <div class="description-reason"> More explanation on this variable </div>
         </td>
         </tr>
 
         <tr valign="top">
-        <th scope="row">Include Collect Amount</th>
+        <td scope="row">Include Collect Amount</td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_include_collect_amount' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
+        echo $html;?>
+        <div class="description-reason"> More explanation on this variable </div>
+        </td>
+        </tr>
+
+        <tr valign="top">
+        <td scope="row">Delivery Info</td>
+        <td><?php
+        $options = get_option( 'sendy_fulfillment_delivery_info' );
+        $html = '<textarea class="sendy-custom-input" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
         echo $html;?>
         </td>
         </tr>
