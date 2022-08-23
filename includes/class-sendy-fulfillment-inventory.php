@@ -1,4 +1,7 @@
 <?php
+
+require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
+
 // add_action( 'the_content', 'product_archive' );
  
 // add_action( 'before_delete_post', 'wpse_110037_new_posts' );
