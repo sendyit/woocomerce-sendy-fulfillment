@@ -6,7 +6,7 @@ function my_cool_plugin_create_menu()
 {
 
     //create new top-level menu
-    add_menu_page('My Cool Plugin Settings', 'Sendy Fulfillment Settings', 'administrator', __FILE__, 'my_cool_plugin_settings_page', plugins_url('/images/icon.png', __FILE__));
+    add_menu_page('My Cool Plugin Settings', 'Sendy Fulfillment', 'administrator', __FILE__, 'my_cool_plugin_settings_page', plugins_url('/images/icon.png', __FILE__));
 
     //call register settings function
     add_action('admin_init', 'register_my_cool_plugin_settings');
@@ -43,6 +43,7 @@ function my_cool_plugin_settings_page()
     {
         $active_tab = $_GET['tab'];
     }
+    if( strlen($active_tab) < 2 ) { $active_tab = 'general';}
 ?>
         <h2 class="nav-tab-wrapper">
             <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>

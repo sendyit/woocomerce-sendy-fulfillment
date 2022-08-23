@@ -24,25 +24,9 @@ function TrackOrder($default_data, $data, $url,$tracking_url){
   //for debug only!
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-  //$resp = curl_exec($curl);
+  $resp = curl_exec($curl);
 
-$resp = '{
-    "message": "Tracking data retrieved successfully",
-    "data": [
-        {
-            "event_code": "event.delivery.order.created",
-            "event_date": 1659968974000,
-            "event_notes": null,
-            "meta_data": []
-        },
-        {
-            "event_code": "event.delivery.order.canceled.by.seller",
-            "event_date": 1659969262000,
-            "event_notes": "Set the wrong quantities",
-            "meta_data": []
-        }
-    ]
-}';
+
 
   curl_close($curl);
   //echo $resp;
@@ -53,7 +37,7 @@ $resp = '{
     $delivery_event =  $resp_json->data;
 
 
-    if(count($delivery_event) == 0){ $delivery_status = 'Order Created';}
+    if(count($delivery_event) == 0){ $delivery_status = 'Order created';}
     else{
 
       //get the last item in array
