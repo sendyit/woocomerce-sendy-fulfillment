@@ -4,14 +4,17 @@ Class FulfillmentProduct {
     public $default_data;
     function __construct() {
 
+        require_once('../../../../../wp-config.php');
+
         //product f(x) includes
-        include 'product/AddProduct.php';
-        include 'product/EditProduct.php';
-        include 'product/ArchiveProduct.php';
+        require_once('product/AddProduct.php');
+        require_once('product/EditProduct.php');
+        require_once('product/ArchiveProduct.php');
 
         //order f(x) includes
-        include 'order/PlaceOrder.php';
-
+        require_once( 'order/PlaceOrder.php');
+        require_once( 'order/TrackOrder.php');
+        
         //get these details
         $this->default_data['apiKey'] = 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE'; //get from db
         $this->default_data['apiusername'] = 'B-DDM-6999'; //get from db
@@ -57,8 +60,26 @@ Class FulfillmentProduct {
         return $response;
     }
     function place_order($data) {
-      $url = $this->get_link('orders');
-      $response = PlaceOrder($this->default_data, $data, $url);
-      return $response;
+        $url = $this->get_link('orders');
+        $response = PlaceOrder($this->default_data, $data, $url);
+        return $response;
+    }
+    function track_order($data) {
+        $url = $this->get_link('orders/tracking/'.$data['order_id']);
+        $response = TrackOrder($this->default_data, $data, $url);
+        return $response;
+    }
+    function test_settings($data){
+
+      $includedStuff = get_included_files();
+      echo '<pre>';
+ //print_r($includedStuff);
+ echo '</pre>';
+
+      add_option('sendy_apiKey', 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
+
+      echo 'testing settings';
+
+
     }
 }
