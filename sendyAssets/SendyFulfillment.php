@@ -14,23 +14,33 @@ Class FulfillmentProduct {
         //order f(x) includes
         require_once( 'order/PlaceOrder.php');
         require_once( 'order/TrackOrder.php');
-        
-        //get these details
-        $this->default_data['apiKey'] = 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE'; //get from db
-        $this->default_data['apiusername'] = 'B-DDM-6999'; //get from db
-        $this->default_data['default_quantity'] = 100; //get from db
-        $this->default_data['default_quantity_type'] = 'Kilograms'; //get from db
-        $this->default_data['default_currency'] = 'KES'; //get from db
-        $this->default_data['environment'] = 'testing'; //get from db
+
+        //get these details for tracking B-MKB-9125  (B-DDM-6999)
+        $this->default_data['apiKey'] = get_option('sendy_fulfillment_api_key'); //get from db
+        $this->default_data['apiusername'] = get_option('sendy_fulfillment_api_username'); //get from db
+        $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity',1); //get from db
+        $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type','KILOGRAMS'); //get from db
+        $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency'); //get from db
+        $this->default_data['environment'] = get_option('sendy_fulfillment_environment'); //get from db  Test
         $this->default_data['default_means_of_payment'] = 'MPESA'; //currently defaulting to mpesa
         $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
         $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
+
+        $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
+        $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
     }
     function get_link($append) {
-        if ($this->default_data['environment'] == 'live') {
+        if ($this->default_data['environment'] == 'Live') {
             return $this->default_data['live_api_link'] . '/' . $append;
         } else {
             return $this->default_data['staging_api_link'] . '/' . $append;
+        }
+    }
+    function get_tracking_link($append) {
+        if ($this->default_data['environment'] == 'Live') {
+            return $this->default_data['live_tracking_link'] . '/' . $append;
+        } else {
+            return $this->default_data['staging_tracking_link'] . '/' . $append;
         }
     }
     function add_edit($data) {
@@ -66,7 +76,8 @@ Class FulfillmentProduct {
     }
     function track_order($data) {
         $url = $this->get_link('orders/tracking/'.$data['order_id']);
-        $response = TrackOrder($this->default_data, $data, $url);
+        $tracking_url = $this->get_tracking_link($data['order_id']);
+        $response = TrackOrder($this->default_data, $data, $url,$tracking_url);
         return $response;
     }
     function test_settings($data){
