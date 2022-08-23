@@ -22,7 +22,6 @@ Text Domain: sendy-fulfillment
 if (!defined('WPINC')) {
     die;
 }
-require_once 'sendyAssets/SendyFulfillment.php';
 
 define('SENDY_FULFILLMENT_WOOCOMMERCE_VERSION', '1.0.0');
 
@@ -43,109 +42,185 @@ register_deactivation_hook(__FILE__, 'deactivate_sendy_fulfillment');
 
 require plugin_dir_path(__FILE__) . 'includes/class-sendy-fulfillment.php';
 
-if (!class_exists('Sendy_Fulfillment')) {}
 
-add_action( 'the_content', 'order_sync' );
- 
-// add_action( 'before_delete_post', 'wpse_110037_new_posts' );
-add_action( 'save_post', 'product_sync' );
-
-function product_sync () {
-    $products = new FulfillmentProduct();
-    global $wpdb;
-    global $woocommerce;
-    $results = $wpdb->get_results( "SELECT 
-    products.ID as id,
-    products.post_name as product_name, 
-    products.post_content as product_description, 
-    products.post_excerpt as product_variant_description, 
-    images.guid as product_variant_image_link 
-    FROM {$wpdb->posts} products 
-    join {$wpdb->posts} images on images.post_parent = products.ID 
-    where products.post_type = 'product' and not products.post_title = 'AUTO-DRAFT'");
-    $response = [];
-    $productsArray = [];
-    foreach($results as $row){  
-      $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
-      $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
-      $row->product_variant_currency = get_woocommerce_currency(); 
-      $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
-      $regular_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_regular_price' and info.post_id = $row->id");
-      if (count($sale_price) > 0) {
-        $row->product_variant_unit_price = $sale_price[0]->meta_value;
-      } else if (count($regular_price) > 0) {
-        $row->product_variant_unit_price = $regular_price[0]->meta_value;
-      }
-      $row->product_variant_quantity_type = get_option('woocommerce_weight_unit');
-      $weight = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_weight' and info.post_id = $row->id");
-      if (count($weight) > 0) {
-        $row->product_variant_quantity = $weight[0]->meta_value;
-      } else {
-        $row->product_variant_quantity = "null";
-      }
-      if ($row->product_description == "") {
-        $row->product_description = "null";
-      }
-      if ($row->product_variant_description == "") {
-        $row->product_variant_description = "null";
-      }
-      if ($row->product_variant_unit_price) {
-        
-        if (count($synced) > 0) {
-            $row->product_id = $synced[count($synced) - 1]->meta_value;
-            $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
-            $array = (array) $row;
-            $product_id = $products->edit($array);
-            array_push($response, $product_id);
-          } else {
-            $array = (array) $row;
-            $product_id = $products->add($array);
-            add_post_meta( $row->id, "sendy_product_id", $product_id['product_id'], false );
-            add_post_meta( $row->id, "sendy_product_variant_id", $product_id['product_variant_id'], false );
-            array_push($response, $product_id);
-          }
-      }
-    }
+function add_settings_page() {
+    add_options_page( 'Sendy Fulfillment page', 'Sendy Fulfillment Menu', 'manage_options', 'sendy-fulfillment-plugin', 'render_plugin_settings_page' );
 }
+add_action( 'admin_menu', 'add_settings_page' );
 
-function order_sync ( $content ) {
-    $orders = new FulfillmentProduct();
-    global $wpdb;
-    global $woocommerce;
-    $results = $wpdb->get_results( "SELECT ID
-    FROM $wpdb->posts orders where orders.post_type = 'shop_order' ");
-    $response = [];
-    $products = [];
-    $payload = (object)[];
-    foreach($results as $row){  
-        $order = wc_get_order($row->ID);
-        foreach ($order->get_items() as $item_id => $item ) {
-            $product_id = $item->get_product_id();
-            $sendy_products = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $product_id");
-            $sendy_product_variants = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $product_id");
-            $sendy_product_id = $sendy_products[count($sendy_products) - 1]->meta_value;
-            $sendy_product_variant_id = $sendy_product_variants[count($sendy_product_variants) - 1]->meta_value;
-            $product = (object)[];
-            $product->product_id = $sendy_product_id;
-            $product->product_variant_id = $sendy_product_variant_id;
-            $product->quantity = $item->get_quantity();
-            $product->currency = $order->get_currency();
-            $product->unit_price = $item->get_product()->get_price();
-            array_push($products, $product);
+function render_plugin_settings_page() {
+    ?>
+    <h2>Sendy Fulfillment Settings</h2>
+
+     <?php
+        if ( isset( $_GET ) ) {
+            $active_tab = $_GET['tab'];
+        } 
+        ?>
+        <h2 class="nav-tab-wrapper">
+            <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
+            <a href="?page=<?php echo $_GET['page']; ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory</a>
+            <a href="?page=<?php echo $_GET['page']; ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders</a>
+        </h2>
+    <form action="options.php" method="post">
+        <?php 
+        if ( $active_tab == 'general' ) {
+            settings_fields( 'sendy_fulfillment_options' );
+            do_settings_sections( 'sendy_fulfillment' );
+            ?>
+            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e( 'Save' ); ?>" /><?php
+        } elseif ( $active_tab == 'inventory' ) {
+            settings_fields( 'sendy_fulfillment_inventory' );
+            do_settings_sections( 'fulfillment_inventory' );
+            ?>
+            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e( 'Save' ); ?>" /><?php
+        } elseif ( $active_tab == 'orders' ) {
+            settings_fields( 'sendy_fulfillment_orders' );
+            do_settings_sections( 'fulfillment_orders' );
+            ?>
+            <input name="submit" class="button button-primary" type="submit" value="<?php esc_attr_e( 'Save' ); ?>" /><?php
         }
-        $destination = (object)[];
-        $destination->name = "Lewis";
-        $destination->phone_number = "+254795510441";
-        $destination->secondary_phone_number = "";
-        $destination->delivery_location = (object)[];
-        $destination->delivery_location->description = "Marsabit plaza";
-        $destination->delivery_location->longitude = 36.8880941;
-        $destination->delivery_location->latitude = -1.3021192;
-        $destination->house_location = "Sendy office";
-        $destination->delivery_instructions = "";
-        $payload->products = $products;
-        $payload->destination = $destination;
-        $order_id = $orders->place_order($payload);
-    }
-    return $content .= "<h6>Add products</h6>" ."\r\n". "<p>" .json_encode($order_id). "</p>". "<p><input type='text' placeholder='Product name' /></p>" ."\r\n". "<br><p><input type='text' placeholder='Product quantity' /></p>";
+        ?>
+    </form>
+    <?php
 }
+
+function register_settings() {
+    register_setting( 'sendy_fulfillment_options', 'sendy_fulfillment_options', 'sendy_fulfillment_options_validate' );
+    register_setting( 'sendy_fulfillment_inventory', 'sendy_fulfillment_inventory' );
+    register_setting( 'sendy_fulfillment_orders', 'sendy_fulfillment_orders' );
+    add_settings_section( 'api_settings', 'API Settings', '__return_false', 'sendy_fulfillment' );
+    add_settings_section( 'inventory_settings', 'Inventory Settings', '__return_false', 'fulfillment_inventory' );
+    add_settings_section( 'order_settings', 'Order Settings', '__return_false', 'fulfillment_orders' );
+/**
+ * General Settings
+ */
+    add_settings_field( 'plugin_setting_api_key', 'API Key', 'plugin_setting_api_key', 'sendy_fulfillment', 'api_settings' );
+    add_settings_field( 'plugin_setting_api_username', 'API Username', 'plugin_setting_api_username', 'sendy_fulfillment', 'api_settings' );
+    add_settings_field( 'plugin_setting_environment', 'Environment', 'plugin_setting_environment', 'sendy_fulfillment', 'api_settings' );
+
+/**
+ * inventory Settings
+ */
+    add_settings_field( 'plugin_setting_sync_products', 'Sync Products on Adding', 'plugin_setting_sync_products', 'fulfillment_inventory', 'inventory_settings' );
+    add_settings_field( 'plugin_setting_sync_all_products', 'Sync All Products', 'plugin_setting_sync_all_products', 'fulfillment_inventory', 'inventory_settings' );
+    add_settings_field( 'plugin_setting_default_currency', 'Default Currency', 'plugin_setting_default_currency', 'fulfillment_inventory', 'inventory_settings' );
+    add_settings_field( 'plugin_setting_default_quantity_type', 'Default Quantity Type', 'plugin_setting_default_quantity_type', 'fulfillment_inventory', 'inventory_settings' );
+    add_settings_field( 'plugin_setting_default_quantity', 'Default Quantity', 'plugin_setting_default_quantity', 'fulfillment_inventory', 'inventory_settings' );
+
+    /**
+ * orders Settings
+ */
+    add_settings_field( 'plugin_setting_place_order', 'Place Order On Fulfillment', 'plugin_setting_place_order', 'fulfillment_orders', 'order_settings' );
+    add_settings_field( 'plugin_setting_add_delivery_note', 'Add Delivery Info', 'plugin_setting_add_delivery_note', 'fulfillment_orders', 'order_settings' );
+    add_settings_field( 'plugin_setting_include_tracking_link', 'Include Tracking Link & Status', 'plugin_setting_include_tracking_link', 'fulfillment_orders', 'order_settings' );
+    add_settings_field( 'plugin_setting_include_collect_amount', 'Include Collect Amount Info', 'plugin_setting_include_collect_amount', 'fulfillment_orders', 'order_settings' );
+}
+add_action( 'admin_init', 'register_settings' );
+
+/**
+ * General Settings
+ */
+
+function sendy_fulfillment_options_validate( $input ) {
+    $newinput['api_key'] = trim( $input['api_key'] );
+    if ( ! preg_match( '/^[a-z0-9]{32}$/i', $newinput['api_key'] ) ) {
+        $newinput['api_key'] = '';
+    }
+
+    return $newinput;
+}
+
+function plugin_section_text() {
+    echo '<p>Here you can set all the options for using the API</p>';
+}
+
+function plugin_setting_api_key() {
+    $options = get_option( 'sendy_fulfillment_options' );
+    echo "<input id='plugin_setting_api_key' name='sendy_fulfillment_options[api_key]' type='text' value='" . esc_attr( $options['api_key'] ) . "' />";
+}
+
+function plugin_setting_api_username() {
+    $options = get_option( 'sendy_fulfillment_options' );
+    echo "<input id='plugin_setting_api_username' name='sendy_fulfillment_options[api_username]' type='text' value='" . esc_attr( $options['api_username'] ) . "' />";
+}
+
+function plugin_setting_environment() {
+    $options = get_option( 'sendy_fulfillment_options' );
+    echo "<input id='plugin_setting_environment' name='sendy_fulfillment_options[environment]' type='text' value='" . esc_attr( $options['environment'] ) . "' />";
+}
+
+
+/**
+ * Inventory Settings
+ */
+
+function inventory_section_text() {
+    echo '<p>Here you can set all the options for your inventory</p>';
+}
+
+function plugin_setting_sync_products() {
+    $options = get_option( 'sendy_fulfillment_inventory' );
+    echo "<input id='plugin_setting_sync_products' name='sendy_fulfillment_inventory[sync_products]' type='checkbox' value='" . esc_attr( $options['sync_products'] ) . "' />";
+}
+
+function plugin_setting_sync_all_products() {
+    $options = get_option( 'sendy_fulfillment_inventory' );
+    echo "<button id='plugin_setting_sync_all_products' name='sendy_fulfillment_inventory[sync_all_products]' type='button' value='" . esc_attr( $options['sync_all_products'] ) . "' >Sync All Products</button>";
+}
+
+function plugin_setting_default_currency() {
+    $options = get_option( 'sendy_fulfillment_inventory' );
+    echo "<input id='plugin_setting_default_currency' name='sendy_fulfillment_inventory[default_currency]' type='text' value='" . esc_attr( $options['default_currency'] ) . "' />";
+}
+
+function plugin_setting_default_quantity_type() {
+    $options = get_option( 'sendy_fulfillment_inventory' );
+    echo "<input id='plugin_setting_default_quantity_type' name='sendy_fulfillment_inventory[default_quantity_type]' type='text' value='" . esc_attr( $options['default_quantity_type'] ) . "' />";
+}
+
+function plugin_setting_default_quantity() {
+    $options = get_option( 'sendy_fulfillment_inventory' );
+    echo "<input id='plugin_setting_default_quantity' name='sendy_fulfillment_inventory[default_quantity]' type='text' value='" . esc_attr( $options['default_quantity'] ) . "' />";
+}
+
+/**
+ * Order Settings
+ */
+
+function order_section_text() {
+    echo '<p>Here you can set all the options for your orders</p>';
+}
+
+function plugin_setting_place_order() {
+    $options = get_option( 'sendy_fulfillment_orders' );
+    echo "<input id='plugin_setting_place_order' name='sendy_fulfillment_orders[place_order]' type='checkbox' value='" . esc_attr( $options['place_order'] ) . "' />";
+}
+
+function plugin_setting_add_delivery_note() {
+    $options = get_option( 'sendy_fulfillment_orders' );
+    echo "<textarea id='plugin_setting_add_delivery_note' name='sendy_fulfillment_orders[add_delivery_note]' rows='4' cols='50' value='" . esc_attr( $options['add_delivery_note'] ) . "' ></textarea>";
+}
+
+function plugin_setting_include_tracking_link() {
+    $options = get_option( 'sendy_fulfillment_orders' );
+    echo "<input id='plugin_setting_include_tracking_link' name='sendy_fulfillment_orders[include_tracking_link]' type='checkbox' value='" . esc_attr( $options['include_tracking_link'] ) . "' />";
+}
+
+function plugin_setting_include_collect_amount() {
+    $options = get_option( 'sendy_fulfillment_orders' );
+    echo "<input id='plugin_setting_include_collect_amount' name='sendy_fulfillment_orders[include_collect_amount]' type='checkbox' value='" . esc_attr( $options['include_collect_amount'] ) . "' />";
+}
+
+/**
+ * This function goes last
+ */
+function run_sendy_fulfillment()
+{
+
+    $plugin = new Sendy_Fulfillment();
+    $plugin->run();
+
+}
+
+run_sendy_fulfillment();
