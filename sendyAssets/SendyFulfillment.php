@@ -3,15 +3,13 @@ Class FulfillmentProduct {
     // Properties
     public $default_data;
     function __construct() {
-
         //product f(x) includes
         include 'product/AddProduct.php';
         include 'product/EditProduct.php';
         include 'product/ArchiveProduct.php';
-
         //order f(x) includes
         include 'order/PlaceOrder.php';
-
+        include 'order/TrackOrder.php';
         //get these details
         $this->default_data['apiKey'] = 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE'; //get from db
         $this->default_data['apiusername'] = 'B-DDM-6999'; //get from db
@@ -57,8 +55,13 @@ Class FulfillmentProduct {
         return $response;
     }
     function place_order($data) {
-      $url = $this->get_link('orders');
-      $response = PlaceOrder($this->default_data, $data, $url);
-      return $response;
+        $url = $this->get_link('orders');
+        $response = PlaceOrder($this->default_data, $data, $url);
+        return $response;
+    }
+    function track_order($data) {
+        $url = $this->get_link('orders/tracking/'.$data['order_id']);
+        $response = TrackOrder($this->default_data, $data, $url);
+        return $response;
     }
 }
