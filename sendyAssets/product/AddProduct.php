@@ -24,6 +24,9 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     ]
     }';
 
+    //echo $add_product_data;
+    //echo $url;
+
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_POST, true);
@@ -37,6 +40,9 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     $resp = curl_exec($curl);
     // curl_close($curl);
+
+    //echo $resp;
+
     $resp_json = json_decode($resp);
 
     if ($resp_json->message == 'Product added successfully') {

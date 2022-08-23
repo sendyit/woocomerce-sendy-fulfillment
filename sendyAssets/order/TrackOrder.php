@@ -1,7 +1,7 @@
 
 <?
 
-function TrackOrder($default_data, $data, $url){
+function TrackOrder($default_data, $data, $url,$tracking_url){
 
 
 
@@ -25,13 +25,43 @@ function TrackOrder($default_data, $data, $url){
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
   $resp = curl_exec($curl);
+
+
+
   curl_close($curl);
-  echo $resp;
+  //echo $resp;
   $resp_json = json_decode($resp);
 
   if ($resp_json->message == 'Tracking data retrieved successfully') {
 
-      return $resp_json->data;
+    $delivery_event =  $resp_json->data;
+
+
+    if(count($delivery_event) == 0){ $delivery_status = 'Order created';}
+    else{
+
+      //get the last item in array
+
+      $latest_delivery_log = $delivery_event[count($delivery_event)-1];
+
+      $latest_delivery_log_message = $latest_delivery_log->event_code;
+
+
+      $delivery_status = $latest_delivery_log_message;
+
+      //remove event.delivery remove . add spaces & capitalize
+
+      $delivery_status =
+      ucfirst(str_replace("."," ",str_replace("event.delivery.","",$latest_delivery_log_message)));
+
+    }
+
+    $tracking_respond = array(
+      'delivery_status'=>$delivery_status,
+      'delivery_tracking_link' => $tracking_url
+    );
+
+      return $tracking_respond;
   } else {
       return ($resp_json->message);
   }
