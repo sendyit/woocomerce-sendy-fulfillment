@@ -4,6 +4,8 @@
 
 function AddProduct($default_data, $data, $url, $product_details_url) {
 
+
+
     $add_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
@@ -22,6 +24,9 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     ]
     }';
 
+    //echo $add_product_data;
+    //echo $url;
+
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_POST, true);
@@ -35,6 +40,9 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     $resp = curl_exec($curl);
     // curl_close($curl);
+
+    //echo $resp;
+
     $resp_json = json_decode($resp);
 
     if ($resp_json->message == 'Product added successfully') {
@@ -92,10 +100,15 @@ function getVariantId($default_data, $product_id, $url){
     return 'not found';
   }
 
+}
 
+function clean_up_quantity($quantity){
 
-
-
+if( $quantity == 'KILOGRAM') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
+else if( $quantity == 'GRAM') { return array('unit'=>'GRAM','ratio'=>1 ); }
+else if( $quantity == 'POUND') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
+else if( $quantity == 'OUNCE') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
+else { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
 
 
 }
