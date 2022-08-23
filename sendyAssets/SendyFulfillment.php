@@ -4,8 +4,6 @@ Class FulfillmentProduct {
     public $default_data;
     function __construct() {
 
-        require_once('../../../../../wp-config.php');
-
         //product f(x) includes
         require_once('product/AddProduct.php');
         require_once('product/EditProduct.php');
@@ -28,6 +26,7 @@ Class FulfillmentProduct {
 
         $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
         $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
+
     }
     function get_link($append) {
         if ($this->default_data['environment'] == 'Live') {
