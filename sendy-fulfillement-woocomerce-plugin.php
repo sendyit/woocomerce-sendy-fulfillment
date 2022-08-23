@@ -109,6 +109,7 @@ function product_sync () {
 }
 
 function order_sync ( $content ) {
+    $orders = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT ID
@@ -144,6 +145,7 @@ function order_sync ( $content ) {
         $destination->delivery_instructions = "";
         $payload->products = $products;
         $payload->destination = $destination;
+        $order_id = $orders->place_order($payload);
     }
-    return $content .= "<h6>Add products</h6>" ."\r\n". "<p>" .json_encode($payload). "</p>". "<p><input type='text' placeholder='Product name' /></p>" ."\r\n". "<br><p><input type='text' placeholder='Product quantity' /></p>";
+    return $content .= "<h6>Add products</h6>" ."\r\n". "<p>" .json_encode($order_id). "</p>". "<p><input type='text' placeholder='Product name' /></p>" ."\r\n". "<br><p><input type='text' placeholder='Product quantity' /></p>";
 }
