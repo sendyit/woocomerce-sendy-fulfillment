@@ -120,9 +120,9 @@ function my_cool_plugin_settings_page()
                     <?php
                         $options = get_option( 'sendy_fulfillment_environment' );
                     ?>
-                    <select class="sendy-custom-input" name='sendy_fulfillment_environment'>
-                        <option value='Test' <?php selected( $options, 1 ); ?>>Test</option>
-                        <option value='Live' <?php selected( $options, 2 ); ?>>Live</option>
+                    <select name='sendy_fulfillment_environment'>
+                        <option value='Test' <?php selected( $options, 'Test' ); ?>>Test</option>
+                        <option value='Live' <?php selected( $options, 'Live' ); ?>>Live</option>
                     </select>
                 </td>
                 </tr>
@@ -158,8 +158,8 @@ function my_cool_plugin_settings_page()
                     <?php
                         $options = get_option( 'sendy_fulfillment_default_currency' );
                     ?>
-                    <select class="sendy-custom-input" name='sendy_fulfillment_default_currency'>
-                        <option value='KES' <?php selected( $options, 1 ); ?>>KES</option>
+                    <select name='sendy_fulfillment_default_currency'>
+                        <option value='KES' <?php selected( $options, 'KES' ); ?>>KES</option>
                     </select>
                 </td>
         </tr>
@@ -170,11 +170,11 @@ function my_cool_plugin_settings_page()
                     <?php
                         $options = get_option( 'sendy_fulfillment_default_quantity_type' );
                     ?>
-                    <select class="sendy-custom-input" name='sendy_fulfillment_default_quantity_type'>
-                        <option value='KILOGRAM' <?php selected( $options, 1 ); ?>>KILOGRAM</option>
-                        <option value='GRAM' <?php selected( $options, 2 ); ?>>GRAM</option>
-                        <option value='LITRE' <?php selected( $options, 3 ); ?>>LITRE</option>
-                        <option value='MILLILITRE' <?php selected( $options, 4 ); ?>>MILLILITRE</option>
+                    <select name='sendy_fulfillment_default_quantity_type'>
+                        <option value='KILOGRAM' <?php selected( $options, 'KILOGRAM' ); ?>>KILOGRAM</option>
+                        <option value='GRAM' <?php selected( $options, 'GRAM' ); ?>>GRAM</option>
+                        <option value='LITRE' <?php selected( $options, 'LITRE' ); ?>>LITRE</option>
+                        <option value='MILLILITRE' <?php selected( $options, 'MILLILITRE' ); ?>>MILLILITRE</option>
                     </select>
                 </td>
         </tr>
