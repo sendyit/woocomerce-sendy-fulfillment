@@ -16,22 +16,22 @@ function register_my_cool_plugin_settings()
 {
 
     //register API settings
-    register_setting('plugin-api-settings', 'api_key');
-    register_setting('plugin-api-settings', 'api_username');
-    register_setting('plugin-api-settings', 'environment');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_api_username');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_environment');
 
     //register inventory settings
-    register_setting('inventory-settings', 'sync_products_on_add');
-    register_setting('inventory-settings', 'sync_all_products');
-    register_setting('inventory-settings', 'default_currency');
-    register_setting('inventory-settings', 'default_quantity_type');
-    register_setting('inventory-settings', 'default_quantity');
+    register_setting('inventory-settings', 'sendy_fulfillment_sync_products_on_add');
+    register_setting('inventory-settings', 'sendy_fulfillment_sync_all_products');
+    register_setting('inventory-settings', 'sendy_fulfillment_default_currency');
+    register_setting('inventory-settings', 'sendy_fulfillment_default_quantity_type');
+    register_setting('inventory-settings', 'sendy_fulfillment_default_quantity');
 
     //register order settings
-    register_setting('order-settings', 'place_order_on_fulfillment');
-    register_setting('order-settings', 'delivery_info');
-    register_setting('order-settings', 'include_tracking');
-    register_setting('order-settings', 'include_collect_amount');
+    register_setting('order-settings', 'sendy_fulfillment_place_order_on_fulfillment');
+    register_setting('order-settings', 'sendy_fulfillment_delivery_info');
+    register_setting('order-settings', 'sendy_fulfillment_include_tracking');
+    register_setting('order-settings', 'sendy_fulfillment_include_collect_amount');
 }
 
 function my_cool_plugin_settings_page()
@@ -59,21 +59,21 @@ function my_cool_plugin_settings_page()
             <table class="form-table">
                 <tr valign="top">
                 <th scope="row">API Key</th>
-                <td><input type="text" name="api_key" value="<?php echo esc_attr(get_option('api_key')); ?>" /></td>
+                <td><input type="text" name="sendy_fulfillment_api_key" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_key')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
                 <th scope="row">API Username</th>
-                <td><input type="text" name="api_username" value="<?php echo esc_attr(get_option('api_username')); ?>" /></td>
+                <td><input type="text" name="sendy_fulfillment_api_username" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
                 <th scope="row">Environment</th>
                 <td>
                     <?php
-                        $options = get_option( 'environment' );
+                        $options = get_option( 'sendy_fulfillment_environment' );
                     ?>
-                    <select name='environment'>
+                    <select name='sendy_fulfillment_environment'>
                         <option value='Test' <?php selected( $options, 1 ); ?>>Test</option>
                         <option value='Live' <?php selected( $options, 2 ); ?>>Live</option>
                     </select>
@@ -97,17 +97,8 @@ function my_cool_plugin_settings_page()
         <tr valign="top">
         <th scope="row">Sync Products On Adding</th>
         <td><?php
-        $options = get_option( 'sync_products_on_add' );
-        $html = '<input type="checkbox" id="sync_products_on_add" name="sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
-        </td>
-        </tr>
-
-        <tr valign="top">
-        <th scope="row">Sync All Products</th>
-        <td><?php
-        $options = get_option( 'sync_all_products' );
-        $html = '<input type="checkbox" id="sync_all_products" name="sync_all_products" value="1"' . checked( 1, $options, false ) . '/>';
+        $options = get_option( 'sendy_fulfillment_sync_products_on_add' );
+        $html = '<input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
         </td>
         </tr>
@@ -116,9 +107,9 @@ function my_cool_plugin_settings_page()
         <th scope="row">Default Currency</th>
         <td>
                     <?php
-                        $options = get_option( 'default_currency' );
+                        $options = get_option( 'sendy_fulfillment_default_currency' );
                     ?>
-                    <select name='default_currency'>
+                    <select name='sendy_fulfillment_default_currency'>
                         <option value='KES' <?php selected( $options, 1 ); ?>>KES</option>
                     </select>
                 </td>
@@ -128,9 +119,9 @@ function my_cool_plugin_settings_page()
         <th scope="row">Default Quantity Type</th>
         <td>
                     <?php
-                        $options = get_option( 'default_quantity_type' );
+                        $options = get_option( 'sendy_fulfillment_default_quantity_type' );
                     ?>
-                    <select name='default_quantity_type'>
+                    <select name='sendy_fulfillment_default_quantity_type'>
                         <option value='KILOGRAM' <?php selected( $options, 1 ); ?>>KILOGRAM</option>
                         <option value='GRAM' <?php selected( $options, 2 ); ?>>GRAM</option>
                         <option value='LITRE' <?php selected( $options, 3 ); ?>>LITRE</option>
@@ -141,13 +132,15 @@ function my_cool_plugin_settings_page()
 
         <tr valign="top">
         <th scope="row">Default Quantity</th>
-        <td><input type="text" name="default_quantity" value="<?php echo esc_attr(get_option('default_quantity')); ?>" /></td>
+        <td><input type="text" name="sendy_fulfillment_default_quantity" value="<?php echo esc_attr(get_option('sendy_fulfillment_default_quantity')); ?>" /></td>
         </tr>
     </table>
 
     <?php submit_button(); ?>
-
 </form>
+<hr/>
+<p>Click the button below to sync all the products</p>
+<button type ="button">Sync All Product</button>
             <?php
     } elseif ($active_tab == 'orders')
     { ?>
@@ -160,8 +153,8 @@ function my_cool_plugin_settings_page()
         <tr valign="top">
         <th scope="row">Place Order On Fulfillment</th>
         <td><?php
-        $options = get_option( 'place_order_on_fulfillment' );
-        $html = '<input type="checkbox" id="place_order_on_fulfillment" name="place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
+        $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );
+        $html = '<input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
         </td>
         </tr>
@@ -169,8 +162,8 @@ function my_cool_plugin_settings_page()
         <tr valign="top">
         <th scope="row">Delivery Info</th>
         <td><?php
-        $options = get_option( 'delivery_info' );
-        $html = '<textarea id="delivery_info" name="delivery_info"' . $options . '>'. $options .'</textarea>';
+        $options = get_option( 'sendy_fulfillment_delivery_info' );
+        $html = '<textarea id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
         echo $html;?>
         </td>
         </tr>
@@ -178,8 +171,8 @@ function my_cool_plugin_settings_page()
         <tr valign="top">
         <th scope="row">Include Tracking Link & Status</th>
         <td><?php
-        $options = get_option( 'include_tracking' );
-        $html = '<input type="checkbox" id="include_tracking" name="include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
+        $options = get_option( 'sendy_fulfillment_include_tracking' );
+        $html = '<input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
         </td>
         </tr>
@@ -187,8 +180,8 @@ function my_cool_plugin_settings_page()
         <tr valign="top">
         <th scope="row">Include Collect Amount</th>
         <td><?php
-        $options = get_option( 'include_collect_amount' );
-        $html = '<input type="checkbox" id="include_collect_amount" name="include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
+        $options = get_option( 'sendy_fulfillment_include_collect_amount' );
+        $html = '<input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
         </td>
         </tr>
