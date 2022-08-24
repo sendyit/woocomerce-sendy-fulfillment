@@ -92,13 +92,7 @@ function product_sync () {
           }
       }
     }
-}
-
-if(isset($_POST['syncAllProducts']))
-{
-   if(product_sync()){
-     echo "<script>alert('Product synced successfully')</script>";
-    }
+    echo "<script>alert('Products syncing completed')</script>";
 }
 
 function product_add ($post_id) {
@@ -150,6 +144,7 @@ function product_add ($post_id) {
             array_push($response, $product_id);
       }
     }
+    echo "<script>alert('Product added successfully')</script>";
 }
 
 function product_archive($post_id) {
@@ -171,6 +166,7 @@ function product_archive($post_id) {
         add_post_meta( $post_id, "test_archive", $product_id, false );
         array_push($response, $product_id);
     }
+    echo "<script>alert('Product archived successfully')</script>";
 }
 
 function order_sync ($post_id) {
@@ -223,5 +219,6 @@ function order_sync ($post_id) {
         // add_post_meta( $post_id, "test_order", JSON_ENCODE($payload), false );
         $order_id = $orders->place_order($payload);
     }
+    echo "<script>alert('Order created successfully')</script>";
 }
 
