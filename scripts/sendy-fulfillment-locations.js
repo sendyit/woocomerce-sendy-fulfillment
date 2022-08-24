@@ -44,9 +44,7 @@ function initMap() { }
                 'to_name': to_name,
                 'to_lat': to_lat,
                 'to_long': to_long,
-            },
-            success: function (res) {},
-            error: function (errorThrown) {}
+            }
         });
     }
 
