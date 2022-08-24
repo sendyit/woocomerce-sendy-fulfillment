@@ -8,7 +8,7 @@
 
         $order_id = WC()->session->get( 'sendy_fulfillment_order_id');
 
-        $data = array('order_id'=>'D-QSU-6745');
+        $data = array('order_id'=>$order_id);
 
         $FulfillmentProduct = new FulfillmentProduct();
 
