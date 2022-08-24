@@ -158,7 +158,11 @@ function my_cool_plugin_settings_page()
         </form>
 
         <hr>
-        <p class="lower-info-section"> more info on how to signup at sendy fulfullment. </p>
+        <p class="lower-info-section"> Create an account at
+          <a type="_blank" href="https://fulfillment.sendyit.com/auth/sign-up">sendy fulfillment</a> and
+          send us an email on <a href="mailto:merchantapi@sendyit.com">merchantapi@sendyit.com </a>
+          to receive an api key and username
+         </p>
             <?php
     }
     elseif ($active_tab == 'inventory')
