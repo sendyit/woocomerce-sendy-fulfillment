@@ -3,6 +3,7 @@
 //product_variant_quantity_type
 
 echo 'testing adding products <br><br>';
+global $woocommerce;
 
 $data = array(
 
