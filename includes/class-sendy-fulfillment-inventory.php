@@ -2,10 +2,9 @@
 
 require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
-// add_action( 'the_content', 'product_archive' );
- 
-// add_action( 'before_delete_post', 'wpse_110037_new_posts' );
-add_action( 'save_post', 'process_action' );
+ add_action( 'save_post', 'process_action' );
+
+ add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
 
 function process_action($post_id) {
     global $wpdb;
@@ -15,12 +14,14 @@ function process_action($post_id) {
     products.post_type
     FROM {$wpdb->posts} products 
     where products.ID = $post_id");
+    $order_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_place_order_on_fulfillment'");
+    $product_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_sync_products_on_add'");
     foreach($results as $row){  
         if ($row->post_status == "trash") {
             product_archive($row->id);
-        } else if ($row->post_status == "publish") {
+        } else if ($row->post_status == "publish" && $product_placement_status[0]->option_value == "1") {
             product_add($row->id);
-        } else if ($row->post_status == "wc-pending" && $row->post_type == "shop_order") {
+        } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
             order_sync($row->id);
         }
     }
@@ -202,22 +203,41 @@ function order_sync ($post_id) {
         $destination->phone_number = get_post_meta($row->ID, '_billing_phone', true);
         $destination->secondary_phone_number = "";
         $destination->delivery_location = (object)[];
-        $destination->delivery_location->description = "Marsabit plaza";
-        $destination->delivery_location->longitude = 36.8880941;
-        $destination->delivery_location->latitude = -1.3021192;
-        $destination->house_location = "N/A";
+        $destination->delivery_location->description = WC()->session->get('customerDeliveryLocationName');
+        $destination->delivery_location->longitude = WC()->session->get('customerDeliveryLocationLat');
+        $destination->delivery_location->latitude = WC()->session->get('customerDeliveryLocationLong');
+        $house_loc = get_post_meta($row->ID, '_billing_address_1', true) . ", " . get_post_meta($row->ID, '_billing_address_2', true);
+        $destination->house_location = $house_loc;
         $notes = wc_get_order_notes(array(
           'order_id' => $row->ID,
         ));
+        $get_notes = $wpdb->get_results("SELECT notes.post_excerpt from {$wpdb->posts} notes where notes.ID = $post_id");
         $all_notes = "";
+        if (count($get_notes) > 0) {
+          $all_notes = $get_notes[0]->post_excerpt;
+        }
+        $sendy_notes = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_delivery_info'");
+        if (count($sendy_notes) > 0) {
+          $all_notes = $all_notes .". ". $sendy_notes[0]->option_value;
+        }
+        $sendy_payments_on_delivery = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_include_collect_amount'");
+        $payment_on_delivery_status = 0;
+        if (count($sendy_payments_on_delivery) > 0) {
+          $payment_on_delivery_status = $sendy_payments_on_delivery[0]->option_value;
+        }
+        $total_amount = get_post_meta($row->ID, '_order_total', true);
+        if ($payment_on_delivery_status === "1") {
+          $all_notes = $all_notes .". ". "Collect " . $order->get_currency() ." ". $total_amount . " on delivery";
+        }
         foreach($notes as $note){ 
           $all_notes = $all_notes . ". " . $note->content;
         }
         $destination->delivery_instructions = $all_notes;
         $payload->products = $products;
         $payload->destination = $destination;
-        // add_post_meta( $post_id, "test_order", JSON_ENCODE($payload), false );
         $order_id = $orders->place_order($payload);
+        WC()->session->set( 'sendy_fulfillment_order_id' , $order_id->order_id );
+        add_post_meta( $post_id, "sendy_order_id", $order_id->order_id, false );
     }
     echo "<script>alert('Order created successfully')</script>";
 }
