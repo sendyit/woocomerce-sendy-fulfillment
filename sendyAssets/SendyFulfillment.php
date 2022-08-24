@@ -3,30 +3,32 @@ Class FulfillmentProduct {
     // Properties
     public $default_data;
     function __construct() {
-
         //product f(x) includes
-        require_once('product/AddProduct.php');
-        require_once('product/EditProduct.php');
-        require_once('product/ArchiveProduct.php');
-
+        require_once ('product/AddProduct.php');
+        require_once ('product/EditProduct.php');
+        require_once ('product/ArchiveProduct.php');
         //order f(x) includes
-        require_once( 'order/PlaceOrder.php');
-        require_once( 'order/TrackOrder.php');
-
-        //get these details for tracking B-MKB-9125  (B-DDM-6999)
-        $this->default_data['apiKey'] = get_option('sendy_fulfillment_api_key'); //get from db
-        $this->default_data['apiusername'] = get_option('sendy_fulfillment_api_username'); //get from db
-        $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity',1); //get from db
-        $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type','KILOGRAMS'); //get from db
-        $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency'); //get from db
-        $this->default_data['environment'] = get_option('sendy_fulfillment_environment'); //get from db  Test
+        require_once ('order/PlaceOrder.php');
+        require_once ('order/TrackOrder.php');
+        //for staging default apiusername to B-IGY-3791 (universal username on staging)
+        $this->default_data['apiKey'] = get_option('sendy_fulfillment_api_key');
+        $this->default_data['apiusername'] = $this->get_apiusername();
+        $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity', 1);
+        $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type', 'KILOGRAMS');
+        $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency', 'KES'); //defaulting to KES
+        $this->default_data['environment'] = get_option('sendy_fulfillment_environment');
         $this->default_data['default_means_of_payment'] = 'MPESA'; //currently defaulting to mpesa
         $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
         $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
-
         $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
         $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
-
+    }
+    function get_apiusername() {
+        if (get_option('sendy_fulfillment_environment') == 'Live') {
+            return get_option('sendy_fulfillment_api_username');
+        } else {
+            return 'B-IGY-3791';
+        }
     }
     function get_link($append) {
         if ($this->default_data['environment'] == 'Live') {
@@ -74,22 +76,17 @@ Class FulfillmentProduct {
         return $response;
     }
     function track_order($data) {
-        $url = $this->get_link('orders/tracking/'.$data['order_id']);
+        $url = $this->get_link('orders/tracking/' . $data['order_id']);
         $tracking_url = $this->get_tracking_link($data['order_id']);
-        $response = TrackOrder($this->default_data, $data, $url,$tracking_url);
+        $response = TrackOrder($this->default_data, $data, $url, $tracking_url);
         return $response;
     }
-    function test_settings($data){
-
-      $includedStuff = get_included_files();
-      echo '<pre>';
- //print_r($includedStuff);
- echo '</pre>';
-
-      add_option('sendy_apiKey', 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
-
-      echo 'testing settings';
-
-
+    function test_settings($data) {
+        $includedStuff = get_included_files();
+        echo '<pre>';
+        //print_r($includedStuff);
+        echo '</pre>';
+        add_option('sendy_apiKey', 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
+        echo 'testing settings';
     }
 }

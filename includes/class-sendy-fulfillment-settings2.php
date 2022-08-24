@@ -2,15 +2,21 @@
 // create custom plugin settings menu
 add_action('admin_menu', 'my_cool_plugin_create_menu');
 
+
 function my_cool_plugin_create_menu()
 {
 
     //create new top-level menu
     add_menu_page('Sendy Fulfillment Settings', 'Sendy Fulfillment', 'administrator', __FILE__, 'my_cool_plugin_settings_page', 'dashicons-menu');
 
+
     //call register settings function
     add_action('admin_init', 'register_my_cool_plugin_settings');
+
+
 }
+
+
 
 function register_my_cool_plugin_settings()
 {
@@ -19,10 +25,14 @@ function register_my_cool_plugin_settings()
     register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
     register_setting('plugin-api-settings', 'sendy_fulfillment_api_username');
     register_setting('plugin-api-settings', 'sendy_fulfillment_environment');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_name');
+
+
+
 
     //register inventory settings
     register_setting('inventory-settings', 'sendy_fulfillment_sync_products_on_add');
-    register_setting('inventory-settings', 'sendy_fulfillment_sync_all_products');
+
     register_setting('inventory-settings', 'sendy_fulfillment_default_currency');
     register_setting('inventory-settings', 'sendy_fulfillment_default_quantity_type');
     register_setting('inventory-settings', 'sendy_fulfillment_default_quantity');
@@ -33,6 +43,8 @@ function register_my_cool_plugin_settings()
     register_setting('order-settings', 'sendy_fulfillment_include_tracking');
     register_setting('order-settings', 'sendy_fulfillment_include_collect_amount');
 }
+
+
 
 function my_cool_plugin_settings_page()
 {
@@ -56,20 +68,15 @@ function my_cool_plugin_settings_page()
 
 .sendy-top-message{
 
-  padding: 10px;
-  margin: 20px 20px 0px 20px;
-  color: #2170b1;
-  margin-bottom: 20px;
-  background-color: #2271b11a;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-  box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-  border-color: #215db170;
+  padding: 10px !important;
+  margin: 20px 20px 0px 20px !important;
+
+  margin-bottom: 20px !important;
+
 
 }
 
-.sendy-synch-now{ padding: 20px;}
+.lower-info-section{ padding: 20px;}
 
 .description-reason{ display: inline; margin-left: 30px; color:grey; font-style:italic;}
 
@@ -93,19 +100,37 @@ function my_cool_plugin_settings_page()
             <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
             <a href="?page=<?php echo $_GET['page']; ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory</a>
             <a href="?page=<?php echo $_GET['page']; ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders</a>
+            <a href="?page=<?php echo $_GET['page']; ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
         </h2>
         <?php if ($active_tab == 'general')
     { ?>
             <h1>API Settings</h1>
 
-            <div class="sendy-top-message"> info on how to get the api </div>
+
+
+
+
+
+
+            <div class="notice inline sendy-top-message notice-info">
+	<p>
+		Some info on how to sign up	</p>
+
+
+</div>
+
+
 
         <form method="post" action="options.php">
             <?php settings_fields('plugin-api-settings'); ?>
             <?php do_settings_sections('plugin-api-settings'); ?>
             <table class="form-table">
+              <tr valign="top">
+              <td style="width:100px;" scope="row">Business Name</td>
+              <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_name')); ?>" /></td>
+              </tr>
                 <tr valign="top">
-                <td style="width:100px;" scope="row">API Key</td>
+                <td scope="row">API Key</td>
                 <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_key" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_key')); ?>" /></td>
                 </tr>
 
@@ -133,13 +158,13 @@ function my_cool_plugin_settings_page()
         </form>
 
         <hr>
-        <p class="sendy-synch-now"> more info on how to signup at sendy fulfullment. </p>
+        <p class="lower-info-section"> more info on how to signup at sendy fulfullment. </p>
             <?php
     }
     elseif ($active_tab == 'inventory')
     { ?>
                 <h1>Inventory Settings</h1>
-                <div class="sendy-top-message"> info on how this works </div>
+                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works </p></div>
 
 
 <form method="post" action="options.php">
@@ -194,7 +219,7 @@ function my_cool_plugin_settings_page()
 <hr/>
 <p>Click the button below to sync all the products</p>
 
-  <?php 
+  <?php
     if (isset($_POST['sync_all_products'])) {
         product_sync();
     }
@@ -208,7 +233,7 @@ function my_cool_plugin_settings_page()
     { ?>
                 <h1>Order Settings</h1>
 
-                <div class="sendy-top-message"> info on how this works </div>
+                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works</p> </div>
 
 <form method="post" action="options.php">
     <?php settings_fields('order-settings'); ?>
@@ -250,7 +275,7 @@ function my_cool_plugin_settings_page()
         <td scope="row">Delivery Info</td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_delivery_info' );
-        $html = '<textarea class="sendy-custom-input" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
+        $html = '<textarea class="sendy-custom-input" style="width:500px;" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
         echo $html;?>
         </td>
         </tr>
@@ -259,8 +284,11 @@ function my_cool_plugin_settings_page()
     <?php submit_button(); ?>
 
 </form>
+
+<hr>
+<p class="lower-info-section"> more info on this section. </p>
             <?php
-    }
+    } elseif ($active_tab == 'Faqs'){  include_once 'pages/faq.php'; }
 ?>
 
 
