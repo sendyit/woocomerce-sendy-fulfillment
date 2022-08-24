@@ -196,9 +196,14 @@ function order_sync ($post_id) {
             array_push($products, $product);
         }
         $destination = (object)[];
+        $biz_name = get_option('sendy_fulfillment_biz_name', '');
+        $business_label = '';
+        if ($biz_name != '') {
+          $business_label = ' (Wordpress order by ' . $biz_name . ')';
+        }
         $fName = get_post_meta($row->ID, '_billing_first_name', true);
         $lName = get_post_meta($row->ID, '_billing_last_name', true);
-        $name = $fName . ' ' . $lName;
+        $name = $fName . ' ' . $lName . $business_label;
         $destination->name = $name;
         $destination->phone_number = get_post_meta($row->ID, '_billing_phone', true);
         $destination->secondary_phone_number = "";
@@ -236,7 +241,6 @@ function order_sync ($post_id) {
         $payload->products = $products;
         $payload->destination = $destination;
         $order_id = $orders->place_order($payload);
-        WC()->session->set( 'sendy_fulfillment_order_id' , $order_id->order_id );
         add_post_meta( $post_id, "sendy_order_id", $order_id->order_id, false );
     }
     echo "<script>alert('Order created successfully')</script>";
