@@ -5,9 +5,6 @@ document.head.appendChild(script);
 function initMap() { }
 (function ($) {
     'use strict';
-    console.log('autocomplete starts');
-    $('.woocommerce-shipping-destination').hide();
-    $('.woocommerce-shipping-fields').hide();
 
     $(() => {
         initMap = function () {
