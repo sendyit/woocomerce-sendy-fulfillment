@@ -1,6 +1,6 @@
 <style>
 
-ul {
+.wrap ul {
     list-style: circle;
     margin-left: 40px;
 }
