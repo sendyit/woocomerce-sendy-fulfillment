@@ -190,13 +190,18 @@ function my_cool_plugin_settings_page()
     </table>
 
     <?php submit_button(); ?>
-</form>
-<hr/>
-<div class="sendy-synch-now">
-<p>Click the button below to sync all the products</p>
-<br>
-<button type ="button" class="button button-sucess">Sync All Products Now </button>
-</div>
+    </form>
+    <hr/>
+    <?php
+    $url = require_once plugin_dir_path( __FILE__ ) . 'class-sendy-fulfillment-inventory.php';
+    ?>
+    <form method="post" action="<?php $url ?>">
+        <div class="sendy-synch-now">
+        <p>Click the button below to sync all the products</p>
+        <br>
+        <input type="submit" value="Sync All Products Now" name="syncAllProducts" class="button button-sucess">
+        </div>
+    </form>
             <?php
     } elseif ($active_tab == 'orders')
     { ?>
