@@ -163,7 +163,7 @@ function my_cool_plugin_settings_page()
     elseif ($active_tab == 'inventory')
     { ?>
                 <h1>Inventory Settings</h1>
-                <div class="notice inline sendy-top-message notice-info"> info on how this works </div>
+                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works </p></div>
 
 
 <form method="post" action="options.php">
@@ -232,7 +232,7 @@ function my_cool_plugin_settings_page()
     { ?>
                 <h1>Order Settings</h1>
 
-                <div class="notice inline sendy-top-message notice-info"> info on how this works </div>
+                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works</p> </div>
 
 <form method="post" action="options.php">
     <?php settings_fields('order-settings'); ?>
