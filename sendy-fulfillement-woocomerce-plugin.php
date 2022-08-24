@@ -43,7 +43,6 @@ register_deactivation_hook(__FILE__, 'deactivate_sendy_fulfillment');
 require plugin_dir_path(__FILE__) . 'includes/class-sendy-fulfillment.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-settings2.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-inventory.php';
-require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-tracking.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-location.php';
 
 
