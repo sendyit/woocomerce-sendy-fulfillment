@@ -2,7 +2,6 @@
   add_action('woocommerce_thankyou', 'add_tracking_data');
 
   function add_tracking_data($order_id){
-      echo("<script>console.log('PHP: " . $order_id . "');</script>");
       echo '<h2>Track Sendy Fulfillment Order</h2>';
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
