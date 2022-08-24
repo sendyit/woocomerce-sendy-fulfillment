@@ -192,11 +192,17 @@ function my_cool_plugin_settings_page()
     <?php submit_button(); ?>
 </form>
 <hr/>
-<div class="sendy-synch-now">
 <p>Click the button below to sync all the products</p>
-<br>
-<button type ="button" class="button button-sucess">Sync All Products Now </button>
-</div>
+
+  <?php 
+    if (isset($_POST['sync_all_products'])) {
+        product_sync();
+    }
+  ?>
+  <form method="post">
+    <input style="background: #2270b1; color: white; padding: 10px 30px; border-radius: 5px; border: none;" type="submit" name="sync_all_products" value="Sync All Product">
+  </form>
+
             <?php
     } elseif ($active_tab == 'orders')
     { ?>
