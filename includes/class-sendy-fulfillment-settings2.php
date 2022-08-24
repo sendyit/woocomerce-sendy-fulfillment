@@ -100,6 +100,7 @@ function my_cool_plugin_settings_page()
             <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>">General</a>
             <a href="?page=<?php echo $_GET['page']; ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory</a>
             <a href="?page=<?php echo $_GET['page']; ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders</a>
+            <a href="?page=<?php echo $_GET['page']; ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
         </h2>
         <?php if ($active_tab == 'general')
     { ?>
@@ -287,7 +288,7 @@ function my_cool_plugin_settings_page()
 <hr>
 <p class="lower-info-section"> more info on this section. </p>
             <?php
-    }
+    } elseif ($active_tab == 'Faqs'){  include_once 'pages/faq.php'; }
 ?>
 
 
