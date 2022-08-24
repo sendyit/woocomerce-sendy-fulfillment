@@ -1,7 +1,7 @@
 <?php
-  $displayTracking = get_option('sendy_fulfillment_include_tracking');
+  $displayTracking = get_option('sendy_fulfillment_include_tracking','0');
   
-  if($displayTracking = '1') {
+  if($displayTracking == '1') {
     add_action('woocommerce_thankyou', 'add_tracking_data'); 
   }
 
