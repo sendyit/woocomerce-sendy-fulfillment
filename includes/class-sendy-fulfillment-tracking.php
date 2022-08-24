@@ -23,7 +23,6 @@
             <div class="tracking-block--inner">
                 <h4 class="tracking-status">'.$orderStatus.'</h4>
                 <a href="'.$trackingLink.'" target="_blank"><button class="track-order-button">Track Order</button></a>
-            </div>
             </div> <br></br>
         ';
   }
