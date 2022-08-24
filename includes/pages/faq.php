@@ -65,5 +65,19 @@ To configure the shipping cost please do it here ->
   </ul>
       <hr/>
 
+      <h1> I have added products in woocomerce & sendy fulfillment separately, what will happen?</h1>
+      <ul><li>
+
+
+Products & orders will not synch corretly since there was no api_key and username linking
+sendy fulfillment to your wordpress account. Please reach out to us on merchantapi@sendyit.com
+and we can help you resolve this.
+
+      </li>
+      
+
+    </ul>
+        <hr/>
+
 
  </div>
