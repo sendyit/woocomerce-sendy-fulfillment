@@ -11,7 +11,8 @@ function process_action($post_id) {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
     products.ID as id,
-    products.post_status
+    products.post_status,
+    products.post_type
     FROM {$wpdb->posts} products 
     where products.ID = $post_id");
     foreach($results as $row){  
@@ -19,6 +20,8 @@ function process_action($post_id) {
             product_archive($row->id);
         } else if ($row->post_status == "publish") {
             product_add($row->id);
+        } else if ($row->post_status == "wc-pending" && $row->post_type == "shop_order") {
+            order_sync($row->id);
         }
     }
 }
@@ -163,12 +166,12 @@ function product_archive($post_id) {
     }
 }
 
-function order_sync ( $content ) {
+function order_sync ($post_id) {
     $orders = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT ID
-    FROM $wpdb->posts orders where orders.post_type = 'shop_order' ");
+    FROM $wpdb->posts orders where orders.ID = $post_id ");
     $response = [];
     $products = [];
     $payload = (object)[];
@@ -189,19 +192,29 @@ function order_sync ( $content ) {
             array_push($products, $product);
         }
         $destination = (object)[];
-        $destination->name = "Lewis";
-        $destination->phone_number = "+254795510441";
+        $fName = get_post_meta($row->ID, '_billing_first_name', true);
+        $lName = get_post_meta($row->ID, '_billing_last_name', true);
+        $name = $fName . ' ' . $lName;
+        $destination->name = $name;
+        $destination->phone_number = get_post_meta($row->ID, '_billing_phone', true);
         $destination->secondary_phone_number = "";
         $destination->delivery_location = (object)[];
         $destination->delivery_location->description = "Marsabit plaza";
         $destination->delivery_location->longitude = 36.8880941;
         $destination->delivery_location->latitude = -1.3021192;
-        $destination->house_location = "Sendy office";
-        $destination->delivery_instructions = "";
+        $destination->house_location = "N/A";
+        $notes = wc_get_order_notes(array(
+          'order_id' => $row->ID,
+        ));
+        $all_notes = "";
+        foreach($notes as $note){ 
+          $all_notes = $all_notes . ". " . $note->content;
+        }
+        $destination->delivery_instructions = $all_notes;
         $payload->products = $products;
         $payload->destination = $destination;
+        // add_post_meta( $post_id, "test_order", JSON_ENCODE($payload), false );
         $order_id = $orders->place_order($payload);
     }
-    return $content .= "<h6>Add products</h6>" ."\r\n". "<p>" .json_encode($order_id). "</p>". "<p><input type='text' placeholder='Product name' /></p>" ."\r\n". "<br><p><input type='text' placeholder='Product quantity' /></p>";
 }
 
