@@ -1,14 +1,32 @@
 <?php
   add_action('woocommerce_thankyou', 'add_tracking_data');
 
-  function add_tracking_data(){
+  function add_tracking_data($order_id){
+      echo("<script>console.log('PHP: " . $order_id . "');</script>");
       echo '<h2>Track Sendy Fulfillment Order</h2>';
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
-        $order_id = WC()->session->get( 'sendy_fulfillment_order_id');
+        $sendy_order_id = '';
 
-        $data = array('order_id'=>$order_id);
+        global $wpdb;
+        global $woocommerce;
+        
+        $results = $wpdb->get_results( "SELECT 
+                orders.meta_id as id,
+                orders.meta_key,
+                orders.meta_value
+                FROM {$wpdb->postmeta} orders 
+                where orders.post_id = $order_id");
+
+        foreach($results as $row){  
+            if ($row->meta_key == "sendy_order_id") {
+                $sendy_order_id = $row->meta_value;
+            }
+        }
+
+
+        $data = array('order_id'=>$sendy_order_id);
 
         $FulfillmentProduct = new FulfillmentProduct();
 
