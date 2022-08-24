@@ -1,5 +1,9 @@
 <?php
-  add_action('woocommerce_thankyou', 'add_tracking_data');
+  $displayTracking = get_option('sendy_fulfillment_include_tracking');
+  
+  if($displayTracking = '1') {
+    add_action('woocommerce_thankyou', 'add_tracking_data'); 
+  }
 
   function add_tracking_data($order_id){
       echo '<h2>Track Sendy Fulfillment Order</h2>';
