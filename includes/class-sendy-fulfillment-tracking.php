@@ -25,7 +25,6 @@
             }
         }
 
-echo("<script>console.log('sendy_order_id: " . $sendy_order_id . "');</script>");
         $data = array('order_id'=>$sendy_order_id);
 
         $FulfillmentProduct = new FulfillmentProduct();
