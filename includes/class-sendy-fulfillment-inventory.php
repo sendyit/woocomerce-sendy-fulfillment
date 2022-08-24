@@ -14,12 +14,14 @@ function process_action($post_id) {
     products.post_type
     FROM {$wpdb->posts} products 
     where products.ID = $post_id");
+    $order_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_place_order_on_fulfillment'");
+    $product_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_sync_products_on_add'");
     foreach($results as $row){  
         if ($row->post_status == "trash") {
             product_archive($row->id);
-        } else if ($row->post_status == "publish") {
+        } else if ($row->post_status == "publish" && $product_placement_status[0]->option_value == "1") {
             product_add($row->id);
-        } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order") {
+        } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
             order_sync($row->id);
         }
     }
@@ -235,6 +237,7 @@ function order_sync ($post_id) {
         $payload->destination = $destination;
         $order_id = $orders->place_order($payload);
         WC()->session->set( 'sendy_fulfillment_order_id' , $order_id->order_id );
+        add_post_meta( $post_id, "sendy_order_id", $order_id->order_id, false );
     }
     echo "<script>alert('Order created successfully')</script>";
 }
