@@ -27,11 +27,13 @@ function saveCustomerLocation() {
             $to_name = sanitize_text_field($_POST['to_name']);
             $to_lat =  sanitize_text_field($_POST['to_lat']);
             $to_long = sanitize_text_field($_POST['to_long']);
-            echo("<script>console.log('PHP: " . $to_long . "');</script>");
+
             //then update session
             WC()->session->set( 'customerDeliveryLocationName' , $to_name );
             WC()->session->set( 'customerDeliveryLocationLat' , $to_lat );
             WC()->session->set( 'customerDeliveryLocationLong' , $to_long );
-     
         }
 }
+
+add_action('wp_ajax_nopriv_saveCustomerLocation', 'saveCustomerLocation');
+add_action('wp_ajax_saveCustomerLocation', 'saveCustomerLocation');
