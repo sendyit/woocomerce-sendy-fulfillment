@@ -70,11 +70,11 @@ To configure the shipping cost please do it here ->
 
 
 Products & orders will not synch corretly since there was no api_key and username linking
-sendy fulfillment to your wordpress account. Please reach out to us on merchantapi@sendyit.com
+sendy fulfillment to your wordpress account. Please reach out to us on <a href="mailto:merchantapi@sendyit.com">merchantapi@sendyit.com</a>
 and we can help you resolve this.
 
       </li>
-      
+
 
     </ul>
         <hr/>
