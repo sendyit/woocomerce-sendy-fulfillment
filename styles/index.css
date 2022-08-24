@@ -1,0 +1,24 @@
+.tracking-block {
+    color: #333;
+    background-color: #f8f8f8;
+    border: 1px solid transparent;
+    -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    height: 13rem;
+    padding: 2rem;
+}
+.track-order-button {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    padding: 0.375em 0.625em !important;
+    color: #32373c !important;
+    border-radius: 4px !important;
+}
+.tracking-status {
+    color: #324ba8;
+    font-weight: 400;
+    font-size: 20px;
+}
+.tracking-block--inner {
+    height:20rem;
+}
