@@ -80,12 +80,7 @@ function my_cool_plugin_settings_page()
 
 .description-reason{ display: inline; margin-left: 30px; color:grey; font-style:italic;}
 
-#adminmenu li.wp-menu-separator {
-     height: 0px !important;
-    padding: 0;
-     margin: 0 0 0px !important;
-     cursor: inherit;
-}
+
 
 </style>
 
