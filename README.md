@@ -28,7 +28,7 @@ Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the 
 ## Automatic Installation
 - Search for “Sendy Fulfilment WooCommerce” from your Wordpress dashboard  under Plugins > Add new
 - After installation has finished, click the ‘activate plugin’ link.
-- Manual Installation via the Wordpress interface
+## Manual Installation via the Wordpress interface
 - Download the plugin zip file to your computer from here
 - Go to the WordPress admin panel menu Plugins > Add New
 - Choose upload
