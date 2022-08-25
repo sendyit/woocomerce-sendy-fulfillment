@@ -16,6 +16,12 @@ class Sendy_Fulfillment_Activator {
 		add_option('sendy_fulfillment_include_tracking', '1');
 		add_option('sendy_fulfillment_include_collect_amount', '0');
 
+		//preset the api nad apiusername
+
+		add_option('sendy_fulfillment_api_key_live', 'znHfpVDE4uGwGSJNNeKKQsbMDynz3thXu7Q7znY4ZgmtcU3h2cCa7yEZfZty');
+		add_option('sendy_fulfillment_api_key_test','uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
+		add_option('sendy_fulfillment_api_username_test','B-IGY-3791');
+
 	}
 
 }

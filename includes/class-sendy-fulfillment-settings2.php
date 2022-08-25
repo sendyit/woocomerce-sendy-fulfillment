@@ -15,8 +15,8 @@ function my_cool_plugin_create_menu()
 function register_my_cool_plugin_settings()
 {
     //register API settings
-    register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
-    register_setting('plugin-api-settings', 'sendy_fulfillment_api_username');
+    //register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_api_username_live');
     register_setting('plugin-api-settings', 'sendy_fulfillment_environment');
     register_setting('plugin-api-settings', 'sendy_fulfillment_biz_name');
 
@@ -75,6 +75,8 @@ function my_cool_plugin_settings_page()
 
 .description-reason{ display: inline; margin-left: 30px; color:grey; font-style:italic;}
 
+
+
 </style>
 
 
@@ -126,12 +128,25 @@ function my_cool_plugin_settings_page()
               </tr>
                 <tr valign="top">
                 <td scope="row">API Key</td>
-                <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_key" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_key')); ?>" /></td>
+                <td><input class="sendy-custom-input" readonly type="text" name="sendy_fulfillment_api_key" value="<?php
+
+                if(get_option('sendy_fulfillment_environment') == 'Live')
+                {
+                  echo get_option('sendy_fulfillment_api_key_live');
+
+                }
+                else
+                {
+                   echo get_option('sendy_fulfillment_api_key_test');
+                }
+
+
+                 ?>" /></td>
                 </tr>
 
                 <tr valign="top">
                 <td scope="row">API Username</td>
-                <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_username" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username')); ?>" /></td>
+                <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_username_live" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username_live')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
@@ -224,7 +239,8 @@ function my_cool_plugin_settings_page()
     }
   ?>
   <form method="post">
-    <input class="button button-sucess" type="submit" name="sync_all_products" value="Sync All Product">
+    <input class="button button-sucess" type="button" id="sync_all_products" onclick="document.getElementById('sync_all_products').value = 'Syncing All Products'; document.getElementById('sync_all_products').setAttribute('disabled', ''); document.getElementById('sync_all_products_hidden').click();" value="Sync all products">
+    <input class="button button-sucess" style="display: none;" id="sync_all_products_hidden" type="submit" name="sync_all_products" value="Sync all products">
   </form>
 
             <?php

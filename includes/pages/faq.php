@@ -6,6 +6,9 @@
 }
 
 .faq-image{ height: 400px; margin-left: 100px; margin-top: 20px; margin-bottom: 30px; display: inline-block;}
+
+
+
 </style>
 
  <div class="wrap">
