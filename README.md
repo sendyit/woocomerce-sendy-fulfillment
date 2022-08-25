@@ -25,7 +25,7 @@ This WooCommerce extension uses the Sendy Fulfilment API  to allow you to automa
 You need to have a Sendy Fulfilment account. If you don’t have one, you can sign-up [here](https://fulfillment.sendyit.com/auth/sign-up)
 A Sendy Fulfilment API key. The API key is a unique identifier for your business, you can get one by sending an email to merchantapi@sendyit.com
 Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the  products are synced and then consign your items to the Sendy fulfilment centres
-## Automatic Installation
+## Automatic Installation (Work in progress, currently not available)
 - Search for “Sendy Fulfilment WooCommerce” from your Wordpress dashboard  under Plugins > Add new
 - After installation has finished, click the ‘activate plugin’ link.
 ## Manual Installation via the Wordpress interface
