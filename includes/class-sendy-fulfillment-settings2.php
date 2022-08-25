@@ -2,25 +2,18 @@
 // create custom plugin settings menu
 add_action('admin_menu', 'my_cool_plugin_create_menu');
 
-
 function my_cool_plugin_create_menu()
 {
-
-    //create new top-level menu
-    add_menu_page('Sendy Fulfillment Settings', 'Sendy Fulfillment', 'administrator', __FILE__, 'my_cool_plugin_settings_page', 'dashicons-menu');
-
+    //create fulfillment menu and submenu
+    add_menu_page( __('Sendy Fulfillment Settings'), __('Sendy Fulfillment'), 'edit_themes', 'sendy-fulfillment', 'my_cool_plugin_settings_page', 'dashicons-menu', 'administrator');
+    add_submenu_page('sendy-fulfillment', 'Support', 'Support', 'edit_themes', 'sendy-fulfillment-support', 'sendy_fulfillment_submenu_settings_page');
 
     //call register settings function
     add_action('admin_init', 'register_my_cool_plugin_settings');
-
-
 }
-
-
 
 function register_my_cool_plugin_settings()
 {
-
     //register API settings
     //register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
     register_setting('plugin-api-settings', 'sendy_fulfillment_api_username_live');
@@ -45,6 +38,8 @@ function register_my_cool_plugin_settings()
 }
 
 
+function sendy_fulfillment_submenu_settings_page()
+{}
 
 function my_cool_plugin_settings_page()
 {

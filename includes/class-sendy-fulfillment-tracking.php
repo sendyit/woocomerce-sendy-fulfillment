@@ -7,7 +7,7 @@
   }
 
   function add_tracking_data($order_id){
-      echo '<h2>Track Sendy Fulfillment Order</h2>';
+      echo '<h2>Track Order</h2>';
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
