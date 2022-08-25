@@ -11,7 +11,7 @@ Class FulfillmentProduct {
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
         //for staging default apiusername to B-IGY-3791 (universal username on staging)
-        $this->default_data['apiKey'] = get_apikey();
+        $this->default_data['apiKey'] = $this->get_apikey();
         $this->default_data['apiusername'] = $this->get_apiusername();
         $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity', 1);
         $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type', 'KILOGRAMS');
