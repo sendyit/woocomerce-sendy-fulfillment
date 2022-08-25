@@ -4,8 +4,6 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfil
 
  add_action( 'save_post', 'process_action' );
 
- add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
-
 function process_action($post_id) {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
@@ -16,11 +14,16 @@ function process_action($post_id) {
     where products.ID = $post_id");
     $order_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_place_order_on_fulfillment'");
     $product_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_sync_products_on_add'");
+    $edit_status = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $post_id");
     foreach($results as $row){  
         if ($row->post_status == "trash") {
             product_archive($row->id);
         } else if ($row->post_status == "publish" && $product_placement_status[0]->option_value == "1") {
+          if (count($edit_status) > 0) {
+            product_edit($row->id);
+          } else {
             product_add($row->id);
+          }
         } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
             order_sync($row->id);
         }
@@ -41,6 +44,8 @@ function product_sync () {
     $response = [];
     $productsArray = [];
     foreach($results as $row){  
+      $product = wc_get_product($row->id);
+      $row->product_name = $product->get_name();
       $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
       $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
       $image = get_the_post_thumbnail_url($row->id);
@@ -103,7 +108,9 @@ function product_add ($post_id) {
     where products.ID = $post_id");
     $response = [];
     $productsArray = [];
-    foreach($results as $row){  
+    foreach($results as $row){ 
+      $product = wc_get_product($row->id);
+      $row->product_name = $product->get_name(); 
       $image = get_the_post_thumbnail_url($row->id);
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
@@ -136,6 +143,59 @@ function product_add ($post_id) {
       }
     }
     echo "<script>alert('Product added successfully')</script>";
+}
+
+function product_edit($post_id) {
+  $products = new FulfillmentProduct();
+  global $wpdb;
+  global $woocommerce;
+  $results = $wpdb->get_results( "SELECT 
+  products.ID as id,
+  products.post_name as product_name, 
+  products.post_content as product_description, 
+  products.post_excerpt as product_variant_description
+  FROM {$wpdb->posts} products 
+  where products.ID = $post_id");
+  $response = [];
+  $productsArray = [];
+  add_post_meta( $post_id, "edit_data", $results, false );
+  foreach($results as $row){  
+    $product = wc_get_product($row->id);
+    $row->product_name = $product->get_name();
+    $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
+    $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+    $image = get_the_post_thumbnail_url($row->id);
+    $row->product_variant_image_link = $image;
+    $row->product_variant_currency = get_woocommerce_currency(); 
+    $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
+    $regular_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_regular_price' and info.post_id = $row->id");
+    if (count($sale_price) > 0) {
+      $row->product_variant_unit_price = $sale_price[0]->meta_value;
+    } else if (count($regular_price) > 0) {
+      $row->product_variant_unit_price = $regular_price[0]->meta_value;
+    }
+    $row->product_variant_quantity_type = get_option('woocommerce_weight_unit');
+    $weight = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_weight' and info.post_id = $row->id");
+    if (count($weight) > 0) {
+      $row->product_variant_quantity = $weight[0]->meta_value;
+    } else {
+      $row->product_variant_quantity = get_option('sendy_fulfillment_default_quantity', 'null');
+    }
+    if ($row->product_description == "") {
+      $row->product_description = "null";
+    }
+    if ($row->product_variant_description == "") {
+      $row->product_variant_description = "null";
+    }
+    if ($row->product_variant_unit_price) {
+        $row->product_id = $synced[count($synced) - 1]->meta_value;
+        $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
+        $array = (array) $row;
+        $product_id = $products->edit($array);
+        array_push($response, $product_id);
+    }
+  }
+  echo "<script>alert('Product edited successfully')</script>";
 }
 
 function product_archive($post_id) {
