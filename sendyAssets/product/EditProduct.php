@@ -3,7 +3,11 @@
 
 
 function EditProduct($default_data, $data, $url) {
+
     //echo $url;
+
+    $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
+
     $add_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
@@ -15,8 +19,8 @@ function EditProduct($default_data, $data, $url) {
         "product_variant_id": "'.$data['product_variant_id'] . '",
         "product_variant_description": "' . $data['product_variant_description'] . '",
         "product_variant_currency": "' . $default_data['default_currency'] . '",
-        "product_variant_unit_price": ' . $data['product_variant_unit_price'] . ',
-        "product_variant_quantity": ' . $data['product_variant_quantity'] . ',
+        "product_variant_quantity": ' . floatval($data['product_variant_quantity']) *  $quantity_data['ratio'] .',
+        "product_variant_quantity_type": "'.$quantity_data['unit'].'",
         "product_variant_quantity_type": "'.clean_up_quantity($data['product_variant_quantity_type']).'",
         "product_variant_image_link": "' . $data['product_variant_image_link'] . '",
         "product_variant_expiry_date": 123456789
@@ -46,15 +50,4 @@ function EditProduct($default_data, $data, $url) {
     } else {
         return ($resp_json->message);
     }
-}
-
-function clean_up_quantity($quantity){
-
-if( $quantity == 'KILOGRAM') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
-else if( $quantity == 'GRAM') { return array('unit'=>'GRAM','ratio'=>1 ); }
-else if( $quantity == 'POUND') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
-else if( $quantity == 'OUNCE') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
-else { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
-
-
 }
