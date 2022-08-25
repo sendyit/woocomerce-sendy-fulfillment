@@ -229,7 +229,8 @@ function my_cool_plugin_settings_page()
     }
   ?>
   <form method="post">
-    <input class="button button-sucess" type="submit" name="sync_all_products" value="Sync All Product">
+    <input class="button button-sucess" type="button" id="sync_all_products" onclick="document.getElementById('sync_all_products').value = 'Syncing All Products'; document.getElementById('sync_all_products').setAttribute('disabled', ''); document.getElementById('sync_all_products_hidden').click();" value="Sync all products">
+    <input class="button button-sucess" style="display: none;" id="sync_all_products_hidden" type="submit" name="sync_all_products" value="Sync all products">
   </form>
 
             <?php

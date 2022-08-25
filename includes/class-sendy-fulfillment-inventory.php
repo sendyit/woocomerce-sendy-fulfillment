@@ -43,12 +43,8 @@ function product_sync () {
     foreach($results as $row){  
       $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
       $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
-      $product_image = $wpdb->get_results("SELECT images.guid from {$wpdb->posts} images where images.post_parent = $row->id");
-      if (count($product_image) > 0) {
-        $row->product_variant_image_link = $product_image[0]->guid;
-      } else {
-        $row->product_variant_image_link = "null";
-      }
+      $image = get_the_post_thumbnail_url($row->id);
+      $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
       $regular_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_regular_price' and info.post_id = $row->id");
@@ -110,12 +106,8 @@ function product_add ($post_id) {
     $response = [];
     $productsArray = [];
     foreach($results as $row){  
-      $product_image = $wpdb->get_results("SELECT images.guid from {$wpdb->posts} images where images.post_parent = $post_id");
-      if (count($product_image) > 0) {
-        $row->product_variant_image_link = $product_image[0]->guid;
-      } else {
-        $row->product_variant_image_link = "null";
-      }
+      $image = get_the_post_thumbnail_url($row->id);
+      $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
       $regular_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_regular_price' and info.post_id = $row->id");
@@ -206,7 +198,6 @@ function order_sync ($post_id) {
         $name = $fName . ' ' . $lName . $business_label;
         $destination->name = $name;
         $destination->phone_number = get_post_meta($row->ID, '_billing_phone', true);
-        $destination->secondary_phone_number = "";
         $destination->delivery_location = (object)[];
         $destination->delivery_location->description = WC()->session->get('customerDeliveryLocationName');
         $destination->delivery_location->longitude = WC()->session->get('customerDeliveryLocationLat');
