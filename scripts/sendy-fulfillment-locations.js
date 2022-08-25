@@ -29,6 +29,9 @@ function initMap() { }
                     document.getElementById("sendy_fulfillment_delivery_address_lat").value = place.geometry.location.lat();
                     document.getElementById("sendy_fulfillment_delivery_address_long").value = place.geometry.location.lng();
 
+                    let billing_address_1 = document.getElementById("billing_address_1").value;
+                    if (billing_address_1.length < 1 ){  document.getElementById("billing_address_1").value =  to_name; }
+
                     saveLocation(to_name, to_lat, to_long);
                 });
         } else {

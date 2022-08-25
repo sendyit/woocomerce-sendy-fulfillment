@@ -36,7 +36,7 @@ function add__delivery_address_field( $fields ) {
 
 	$fields[ 'sendy_fulfillment_delivery_address' ]   = array(
     'id'           => 'sendy_fulfillment_delivery_address',
-		'label'        => 'Sendy Fulfillment Delivery Address',
+		'label'        => 'Delivery Address',
 		'required'     => true,
 		'class'        => array( 'form-row-wide', 'my-custom-class' ),
 		'priority'     => 20
@@ -45,8 +45,8 @@ function add__delivery_address_field( $fields ) {
 
   $fields[ 'sendy_fulfillment_delivery_address_lat' ]   = array(
     'id'           => 'sendy_fulfillment_delivery_address_lat',
-    'label'        => 'Sendy Fulfillment Delivery Address',
-
+    'label'        => '',
+    'type' => 'hidden',
     'class'        => array( 'form-row-wide', 'my-custom-class' ),
     'priority'     => 20
     //'placeholder'  => 'Enter a delivery address',
@@ -54,8 +54,8 @@ function add__delivery_address_field( $fields ) {
 
   $fields[ 'sendy_fulfillment_delivery_address_long' ]   = array(
     'id'           => 'sendy_fulfillment_delivery_address_long',
-    'label'        => 'Sendy Fulfillment Delivery Address',
-
+    'label'        => '',
+    'type' => 'hidden',
     'class'        => array( 'form-row-wide', 'my-custom-class' ),
     'priority'     => 20
     //'placeholder'  => 'Enter a delivery address',
