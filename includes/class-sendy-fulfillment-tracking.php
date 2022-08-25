@@ -1,9 +1,9 @@
 <?php
   $displayTracking = get_option('sendy_fulfillment_include_tracking','0');
   $createFulfillmentOrder = get_option('sendy_fulfillment_place_order_on_fulfillment','0');
-  
+
   if($displayTracking == '1' && $createFulfillmentOrder == '1') {
-    add_action('woocommerce_thankyou', 'add_tracking_data'); 
+    add_action('woocommerce_thankyou', 'add_tracking_data');
   }
 
   function add_tracking_data($order_id){
@@ -15,15 +15,15 @@
 
         global $wpdb;
         global $woocommerce;
-        
-        $results = $wpdb->get_results( "SELECT 
+
+        $results = $wpdb->get_results( "SELECT
                 orders.meta_id as id,
                 orders.meta_key,
                 orders.meta_value
-                FROM {$wpdb->postmeta} orders 
+                FROM {$wpdb->postmeta} orders
                 where orders.post_id = $order_id");
 
-        foreach($results as $row){  
+        foreach($results as $row){
             if ($row->meta_key == "sendy_order_id") {
                 $sendy_order_id = $row->meta_value;
             }
@@ -44,7 +44,7 @@
             <div class="tracking-block--inner">
                 <h4 class="tracking-status">'.$orderStatus.'</h4>
                 <a href="'.$trackingLink.'" target="_blank"><button class="track-order-button">Track Order</button></a>
-            </div> <br></br>
+            </div> </div><br></br>
         ';
   }
   function add_style()
