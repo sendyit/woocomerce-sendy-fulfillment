@@ -39,7 +39,7 @@ Install the dependencies and devDependencies and kick off.
  - On your wordpress Admin, click on 'Plugins/Add New' and search for Sendy Fulfillment (the plugin you just downloaded)
  - Activate the plugin
  - Go to the Sendy fulfillment tab on the left
- - Setup the sesstings on General, Inventory & Order
+ - Setup the sesttings on General, Inventory & Order
  - There is an FAQ tab as well incase of any issue
  - Email us at merchantapi@sendyit.com incase you need help
 
