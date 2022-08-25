@@ -8,7 +8,7 @@ function initMap() { }
 
     $(() => {
         initMap = function () {
-            $('#sendy_fulfillment_delivery_address').val('');
+          //  $('#sendy_fulfillment_delivery_address').val('');
         }
     });
 
@@ -25,6 +25,8 @@ function initMap() { }
                     let to_name = place.name;
                     let to_lat = place.geometry.location.lat();
                     let to_long = place.geometry.location.lng();
+
+                  
                     saveLocation(to_name, to_lat, to_long);
                 });
         } else {
