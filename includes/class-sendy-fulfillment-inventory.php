@@ -58,7 +58,7 @@ function product_sync () {
       if (count($weight) > 0) {
         $row->product_variant_quantity = $weight[0]->meta_value;
       } else {
-        $row->product_variant_quantity = "null";
+        $row->product_variant_quantity = get_option('sendy_fulfillment_default_quantity', 'null');
       }
       if ($row->product_description == "") {
         $row->product_description = "null";
@@ -72,12 +72,10 @@ function product_sync () {
             $row->product_id = $synced[count($synced) - 1]->meta_value;
             $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
             $array = (array) $row;
-            // add_post_meta( $row->id, "edit", $array, false );
             $product_id = $products->edit($array);
             array_push($response, $product_id);
           } else {
             $array = (array) $row;
-            // add_post_meta( $row->id, "add", $array, false );
             $product_id = $products->add($array);
             if ($product_id['product_id'] != NULL) {
               add_post_meta( $row->id, "sendy_product_id", $product_id['product_id'], false );
@@ -121,7 +119,7 @@ function product_add ($post_id) {
       if (count($weight) > 0) {
         $row->product_variant_quantity = $weight[0]->meta_value;
       } else {
-        $row->product_variant_quantity = "null";
+        $row->product_variant_quantity = get_option('sendy_fulfillment_default_quantity', 'null');
       }
       if ($row->product_description == "") {
         $row->product_description = "null";
