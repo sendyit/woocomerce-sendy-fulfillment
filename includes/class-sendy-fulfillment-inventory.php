@@ -286,6 +286,9 @@ function order_sync ($post_id) {
         foreach($notes as $note){ 
           $all_notes = $all_notes . ". " . $note->content;
         }
+        if ($all_notes == "") {
+          $all_notes = "null";
+        }
         $destination->delivery_instructions = $all_notes;
         $payload->products = $products;
         $payload->destination = $destination;
