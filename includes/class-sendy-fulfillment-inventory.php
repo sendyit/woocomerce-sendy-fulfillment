@@ -46,6 +46,8 @@ function product_sync () {
     $response = [];
     $productsArray = [];
     foreach($results as $row){  
+      $product = wc_get_product($row->id);
+      $row->product_name = $product->get_name();
       $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
       $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
       $image = get_the_post_thumbnail_url($row->id);
@@ -108,7 +110,9 @@ function product_add ($post_id) {
     where products.ID = $post_id");
     $response = [];
     $productsArray = [];
-    foreach($results as $row){  
+    foreach($results as $row){ 
+      $product = wc_get_product($row->id);
+      $row->product_name = $product->get_name(); 
       $image = get_the_post_thumbnail_url($row->id);
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
@@ -158,6 +162,8 @@ function product_edit($post_id) {
   $productsArray = [];
   add_post_meta( $post_id, "edit_data", $results, false );
   foreach($results as $row){  
+    $product = wc_get_product($row->id);
+    $row->product_name = $product->get_name();
     $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
     $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
     $image = get_the_post_thumbnail_url($row->id);
