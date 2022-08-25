@@ -16,8 +16,8 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
         "product_variant_description": "' . $data['product_variant_description'] . '",
         "product_variant_currency": "' . $default_data['default_currency'] . '",
         "product_variant_unit_price": ' . $data['product_variant_unit_price'] . ',
-        "product_variant_quantity": 30,
-        "product_variant_quantity_type": "KILOGRAM",
+        "product_variant_quantity": ' . $data['product_variant_quantity'] . ',
+        "product_variant_quantity_type": "'.clean_up_quantity($data['product_variant_quantity_type']).'",
         "product_variant_image_link": "' . $data['product_variant_image_link'] . '",
         "product_variant_expiry_date": 123456789
     }
