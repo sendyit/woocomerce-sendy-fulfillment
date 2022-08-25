@@ -14,7 +14,7 @@ function initMap() { }
 
     $('#sendy_fulfillment_delivery_address').keyup(function () {
         if (typeof google === 'object' && typeof google.maps === 'object') {
-            let country = 'ke';
+            let country = ['ke', 'ug', 'ng', 'ci'];
             let options = {
                 componentRestrictions: { country: country },
             };
