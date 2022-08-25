@@ -6,7 +6,7 @@ function my_cool_plugin_create_menu()
 {
     //create fulfillment menu and submenu
     add_menu_page('Sendy Fulfillment Settings', 'Sendy Fulfillment', 'edit_themes', 'sendy-fulfillment', 'my_cool_plugin_settings_page', 'dashicons-menu', 'administrator');
-    add_submenu_page('sendy-fulfillment', 'Installation Guide', 'Installation Guide', 'edit_themes', 'sendy-fulfillment-installation-guide', 'sendy_fulfillment_submenu_settings_page');
+    //add_submenu_page('sendy-fulfillment', 'Installation Guide', 'Installation Guide', 'edit_themes', 'sendy-fulfillment-installation-guide', 'sendy_fulfillment_submenu_settings_page');
 
     //call register settings function
     add_action('admin_init', 'register_my_cool_plugin_settings');
@@ -111,7 +111,12 @@ function my_cool_plugin_settings_page()
 
             <div class="notice inline sendy-top-message notice-info">
 	<p>
-		Some info on how to sign up	</p>
+    These configurations enable us to uniquely identify and authenticate the requests made from your woocommerce store. To get the API key and API username  for your business, send an email request to merchantapi@sendyit.com
+</p><p>
+You can test the plugin without an API-key but don’t forget to configure your API key and switch to production once testing is done.
+</p><p>
+You can use any business name but we advise you to use the same name as on the Sendy Fulfilment app to avoid confusion.
+	</p>
 
 
 </div>
@@ -178,7 +183,10 @@ function my_cool_plugin_settings_page()
     elseif ($active_tab == 'inventory')
     { ?>
                 <h1>Inventory Settings</h1>
-                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works </p></div>
+                <div class="notice inline sendy-top-message notice-info"> <p>
+
+During delivery and pickup, Sendy Fulfilment needs to know the product weight or capacity for delivery consolidation purposes. We also need to know the price of each product for insurance purposes.
+                 </p></div>
 
 
 <form method="post" action="options.php">
@@ -191,7 +199,8 @@ function my_cool_plugin_settings_page()
         $options = get_option( 'sendy_fulfillment_sync_products_on_add' );
         $html = '<input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
-        <div class="description-reason"> More explanation on this variable </div>
+        <div class="description-reason"> When this is checked your inventory will synch automatically when you update
+        your products </div>
         </td>
         </tr>
 
@@ -248,7 +257,7 @@ function my_cool_plugin_settings_page()
     { ?>
                 <h1>Order Settings</h1>
 
-                <div class="notice inline sendy-top-message notice-info"> <p>info on how this works</p> </div>
+                <div style="display:none;" class="notice inline sendy-top-message notice-info"> <p>info on how this works</p> </div>
 
 <form method="post" action="options.php">
     <?php settings_fields('order-settings'); ?>
@@ -260,7 +269,8 @@ function my_cool_plugin_settings_page()
         $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );
         $html = '<input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
-        <div class="description-reason"> More explanation on this variable </div>
+        <div class="description-reason"> When checked, a fulfillment order will be placed once a customer places
+        an order on your e-commerce site </div>
         </td>
         </tr>
 
@@ -272,7 +282,7 @@ function my_cool_plugin_settings_page()
         $options = get_option( 'sendy_fulfillment_include_tracking' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
-        <div class="description-reason"> More explanation on this variable </div>
+        <div class="description-reason"> When checked tracking link and status will be added to the order received page </div>
         </td>
         </tr>
 
@@ -282,12 +292,13 @@ function my_cool_plugin_settings_page()
         $options = get_option( 'sendy_fulfillment_include_collect_amount' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
         echo $html;?>
-        <div class="description-reason"> More explanation on this variable </div>
+        <div class="description-reason"> When checked the rider will receive a note indicating the amount to collect from
+        the customer </div>
         </td>
         </tr>
 
         <tr valign="top">
-        <td scope="row">Delivery Info</td>
+        <td scope="row">Additional Delivery Info (optional) </td>
         <td><?php
         $options = get_option( 'sendy_fulfillment_delivery_info' );
         $html = '<textarea class="sendy-custom-input" style="width:500px;" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
@@ -301,7 +312,7 @@ function my_cool_plugin_settings_page()
 </form>
 
 <hr>
-<p class="lower-info-section"> more info on this section. </p>
+<p class="lower-info-section">  </p>
             <?php
     } elseif ($active_tab == 'Faqs'){  include_once 'pages/faq.php'; }
 ?>
