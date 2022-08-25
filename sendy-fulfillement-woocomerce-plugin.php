@@ -10,7 +10,7 @@ Description: Plugin to allow automation of consignment and delivery with Sendy F
 
 Version: 1.0.0
 
-Author: Merchant Engineers
+Author: Sendy Engineering
 
 License: GPLv2 or later
 
