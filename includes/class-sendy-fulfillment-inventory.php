@@ -287,7 +287,7 @@ function order_sync ($post_id) {
           $all_notes = $all_notes . ". " . $note->content;
         }
         if ($all_notes == "") {
-          $all_notes = "null";
+          $all_notes = "No notes";
         }
         $destination->delivery_instructions = $all_notes;
         $payload->products = $products;
