@@ -4,8 +4,6 @@ require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfil
 
  add_action( 'save_post', 'process_action' );
 
- add_filter( 'woocommerce_cart_needs_payment', '__return_false' );
-
 function process_action($post_id) {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
