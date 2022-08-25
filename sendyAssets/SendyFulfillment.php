@@ -11,7 +11,7 @@ Class FulfillmentProduct {
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
         //for staging default apiusername to B-IGY-3791 (universal username on staging)
-        $this->default_data['apiKey'] = get_option('sendy_fulfillment_api_key');
+        $this->default_data['apiKey'] = $this->get_apikey();
         $this->default_data['apiusername'] = $this->get_apiusername();
         $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity', 1);
         $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type', 'KILOGRAMS');
@@ -25,10 +25,20 @@ Class FulfillmentProduct {
     }
     function get_apiusername() {
         if (get_option('sendy_fulfillment_environment') == 'Live') {
-            return get_option('sendy_fulfillment_api_username');
+            return get_option('sendy_fulfillment_api_username_live');
         } else {
-            return 'B-IGY-3791';
+          //  return 'B-IGY-3791';
+          return get_option('sendy_fulfillment_api_username_test');
         }
+      }
+  function get_apikey() {
+      if (get_option('sendy_fulfillment_environment') == 'Live') {
+          return get_option('sendy_fulfillment_api_key_live');
+      } else {
+
+          return get_option('sendy_fulfillment_api_key_test');
+      }
+
     }
     function get_link($append) {
         if ($this->default_data['environment'] == 'Live') {
