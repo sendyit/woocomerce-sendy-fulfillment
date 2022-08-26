@@ -23,15 +23,15 @@ function process_action($post_id) {
     }
     foreach($results as $row){  
         if ($row->post_status == "trash") {
-            product_archive($row->id, $env);
+            product_archive($row->id);
         } else if ($row->post_status == "publish" && $product_placement_status[0]->option_value == "1") {
           if (count($edit_status) > 0) {
-            product_edit($row->id, $env);
+            product_edit($row->id);
           } else {
-            product_add($row->id, $env);
+            product_add($row->id);
           }
         } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
-            order_sync($row->id, $env);
+            order_sync($row->id);
         }
     }
 }
@@ -110,7 +110,7 @@ function product_sync () {
     echo "<script>alert('Products syncing completed')</script>";
 }
 
-function product_add ($post_id, $env) {
+function product_add ($post_id) {
     $products = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
@@ -149,6 +149,7 @@ function product_add ($post_id, $env) {
       if ($row->product_variant_description == "") {
         $row->product_variant_description = "null";
       }
+      $env = get_option("sendy_fulfillment_environment");
       if ($row->product_variant_unit_price) {
             $array = (array) $row;
             $product_id = $products->add($array);
@@ -160,7 +161,7 @@ function product_add ($post_id, $env) {
     echo "<script>alert('Product added successfully')</script>";
 }
 
-function product_edit($post_id, $env) {
+function product_edit($post_id) {
   $products = new FulfillmentProduct();
   global $wpdb;
   global $woocommerce;
@@ -174,6 +175,7 @@ function product_edit($post_id, $env) {
   $response = [];
   $productsArray = [];
   foreach($results as $row){  
+    $env = get_option("sendy_fulfillment_environment");
     $product = wc_get_product($row->id);
     $row->product_name = $product->get_name();
     $synced = [];
@@ -219,7 +221,7 @@ function product_edit($post_id, $env) {
   echo "<script>alert('Product edited successfully')</script>";
 }
 
-function product_archive($post_id, $env) {
+function product_archive($post_id) {
     $products = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
@@ -230,6 +232,7 @@ function product_archive($post_id, $env) {
     $response = [];
     $productsArray = [];
     foreach($results as $row){  
+      $env = get_option("sendy_fulfillment_environment");
       $synced = [];
       $synced_variant = [];
       if ($env == "Test") {
@@ -247,7 +250,7 @@ function product_archive($post_id, $env) {
     echo "<script>alert('Product archived successfully')</script>";
 }
 
-function order_sync ($post_id, $env) {
+function order_sync ($post_id) {
     $orders = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
@@ -258,6 +261,7 @@ function order_sync ($post_id, $env) {
     $env = get_option("sendy_fulfillment_environment");
     $payload = (object)[];
     foreach($results as $row){  
+        $env = get_option("sendy_fulfillment_environment");
         $order = wc_get_order($row->ID);
         foreach ($order->get_items() as $item_id => $item ) {
             $product_id = $item->get_product_id();
