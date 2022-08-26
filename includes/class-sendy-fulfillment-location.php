@@ -11,15 +11,15 @@ function add_js_scripts()
 
  if($woocommerce_ship_to_destination == 'billing' || $woocommerce_ship_to_destination == 'billing_only'){
 
-   WC()->session->set( 'customerDeliveryLocationName' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address') );
-   WC()->session->set( 'customerDeliveryLocationLat' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address_lat') );
-   WC()->session->set( 'customerDeliveryLocationLong' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address_long') );
+   WC()->session->set( 'customerDeliveryLocationName' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address')[0] );
+   WC()->session->set( 'customerDeliveryLocationLat' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address_lat')[0] );
+   WC()->session->set( 'customerDeliveryLocationLong' , get_user_meta($current_user_id,'billing_sendy_fulfillment_delivery_address_long')[0] );
 
  } else if ($woocommerce_ship_to_destination == 'shipping'){
 
-   WC()->session->set( 'customerDeliveryLocationName' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address') );
-   WC()->session->set( 'customerDeliveryLocationLat' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address_lat') );
-   WC()->session->set( 'customerDeliveryLocationLong' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address_long') );
+   WC()->session->set( 'customerDeliveryLocationName' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address')[0] );
+   WC()->session->set( 'customerDeliveryLocationLat' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address_lat')[0] );
+   WC()->session->set( 'customerDeliveryLocationLong' , get_user_meta($current_user_id,'shipping_sendy_fulfillment_delivery_address_long')[0] );
 
  }
 

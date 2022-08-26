@@ -19,8 +19,8 @@ This WooCommerce extension uses the Sendy Fulfilment API  to allow you to automa
 - **Manage inventory**: feature will allow you to sync your product inventory between your woocommerce store and the Sendy Fulfilment app. 
 ## Installation
 ### Minimum requirements
-- Wordpress vx.x
-- Woocommerce vx.x
+- Wordpress 5.8.3
+- Woocommerce 6.1.0
 ### Other prerequisites:
 You need to have a Sendy Fulfilment account. If you don’t have one, you can sign-up [here](https://fulfillment.sendyit.com/auth/sign-up)
 A Sendy Fulfilment API key. The API key is a unique identifier for your business, you can get one by sending an email to merchantapi@sendyit.com
