@@ -22,9 +22,15 @@
                 orders.meta_value
                 FROM {$wpdb->postmeta} orders
                 where orders.post_id = $order_id");
-
+        $env = get_option("sendy_fulfillment_environment");
+        $order_id = "";
+        if ($env == "Test") {
+          $order_id = "sendy_order_id_test";
+        } else {
+          $order_id = "sendy_order_id";
+        }
         foreach($results as $row){
-            if ($row->meta_key == "sendy_order_id") {
+            if ($row->meta_key == $order_id) {
                 $sendy_order_id = $row->meta_value;
             }
         }
