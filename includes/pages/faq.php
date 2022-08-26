@@ -30,14 +30,14 @@ products that synched and ones that did not
 
   <h1> How to define how much the rider will collect from your customer</h1>
   <ul>
-<li> If this sesstin <strong> Include Collect Amount </strong> is set in the <strong>Orders
+<li> If this setting <strong> Include Collect Amount </strong> is set in the <strong>Orders
 </strong>
 tab, we will include a message to the rider to collect payment from the customer </li>
     <li>
   The amount to collect is the total amount indicated at the checkout page.The partner will
   get the a notification to collect the total amount as shown below
 
-  <img class="faq-image" src ="<?php echo plugins_url('sendy-fulfillment/includes');?>/images/faq-images/total_amount.png" />
+  <img class="faq-image" src ="https://images.sendyit.com/fulfilment/seller/total_amount.png" />
 
 
 
@@ -75,6 +75,19 @@ To configure the shipping cost please do it here ->
 Products & orders will not synch corretly since there was no api_key and username linking
 sendy fulfillment to your wordpress account. Please reach out to us on <a href="mailto:merchantapi@sendyit.com">merchantapi@sendyit.com</a>
 and we can help you resolve this.
+
+      </li>
+
+
+    </ul>
+        <hr/>
+
+        <h1> My orders are not being created after switching environments</h1>
+      <ul><li>
+
+
+        If you had been using the test environment to add products then they have not synced to your live account. This will cause the order placement process to fail if you have switched to the live environment. To avoid
+         this please click on the sync all products button in the inventory tab to make sure your products are available on you live account.
 
       </li>
 

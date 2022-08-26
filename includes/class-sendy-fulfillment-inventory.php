@@ -12,9 +12,15 @@ function process_action($post_id) {
     products.post_type
     FROM {$wpdb->posts} products 
     where products.ID = $post_id");
+    $env = get_option("sendy_fulfillment_environment");
+    $edit_status = [];
     $order_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_place_order_on_fulfillment'");
     $product_placement_status = $wpdb->get_results("SELECT settings.option_value from {$wpdb->options} settings where settings.option_name = 'sendy_fulfillment_sync_products_on_add'");
-    $edit_status = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $post_id");
+    if ($env == "Test") {
+      $edit_status = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id_test' and info.post_id = $post_id");
+    } else {
+      $edit_status = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $post_id");
+    }
     foreach($results as $row){  
         if ($row->post_status == "trash") {
             product_archive($row->id);
@@ -31,6 +37,7 @@ function process_action($post_id) {
 }
 
 function product_sync () {
+    $env = get_option("sendy_fulfillment_environment");
     $products = new FulfillmentProduct();
     global $wpdb;
     global $woocommerce;
@@ -43,12 +50,23 @@ function product_sync () {
     where products.post_type = 'product' and not products.post_title = 'AUTO-DRAFT' and not products.post_status = 'trash'");
     $response = [];
     $productsArray = [];
+    $env = get_option("sendy_fulfillment_environment");
     foreach($results as $row){  
       $product = wc_get_product($row->id);
       $row->product_name = $product->get_name();
-      $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
-      $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+      $synced = [];
+      $synced_variant = [];
+      if ($env == "Test") {
+        $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id_test' and info.post_id = $row->id");
+        $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id_test' and info.post_id = $row->id");
+      } else {
+        $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
+        $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+      }
       $image = get_the_post_thumbnail_url($row->id);
+      if ($image ==  false) {
+        $image = "null";
+      }
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
@@ -83,10 +101,10 @@ function product_sync () {
             $array = (array) $row;
             $product_id = $products->add($array);
             if ($product_id['product_id'] != NULL) {
-              add_post_meta( $row->id, "sendy_product_id", $product_id['product_id'], false );
-              add_post_meta( $row->id, "sendy_product_variant_id", $product_id['product_variant_id'], false );
+              add_post_meta( $row->id, $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id', $product_id['product_id'], false );
+              add_post_meta( $row->id, $env == "Test" ? 'sendy_product_variant_id_test' : 'sendy_product_variant_id', $product_id['product_variant_id'], false );
             } else {
-              add_post_meta( $row->id, "failed_sync", $array, false );
+              add_post_meta( $row->id, $env == "Test" ? 'failed_sync_test' : 'failed_sync', $array, false );
             }
             array_push($response, $product_id);
           }
@@ -112,6 +130,9 @@ function product_add ($post_id) {
       $product = wc_get_product($row->id);
       $row->product_name = $product->get_name(); 
       $image = get_the_post_thumbnail_url($row->id);
+      if ($image ==  false) {
+        $image = "null";
+      }
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
@@ -134,11 +155,12 @@ function product_add ($post_id) {
       if ($row->product_variant_description == "") {
         $row->product_variant_description = "null";
       }
+      $env = get_option("sendy_fulfillment_environment");
       if ($row->product_variant_unit_price) {
             $array = (array) $row;
             $product_id = $products->add($array);
-            add_post_meta( $row->id, "sendy_product_id", $product_id['product_id'], false );
-            add_post_meta( $row->id, "sendy_product_variant_id", $product_id['product_variant_id'], false );
+            add_post_meta( $row->id, $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id', $product_id['product_id'], false );
+            add_post_meta( $row->id, $env == "Test" ? 'sendy_product_variant_id_test' : 'sendy_product_variant_id', $product_id['product_variant_id'], false );
             array_push($response, $product_id);
       }
     }
@@ -158,13 +180,23 @@ function product_edit($post_id) {
   where products.ID = $post_id");
   $response = [];
   $productsArray = [];
-  add_post_meta( $post_id, "edit_data", $results, false );
   foreach($results as $row){  
+    $env = get_option("sendy_fulfillment_environment");
     $product = wc_get_product($row->id);
     $row->product_name = $product->get_name();
-    $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
-    $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+    $synced = [];
+    $synced_variant = [];
+    if ($env == "Test") {
+      $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id_test' and info.post_id = $row->id");
+      $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id_test' and info.post_id = $row->id");
+    } else {
+      $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
+      $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+    }
     $image = get_the_post_thumbnail_url($row->id);
+    if ($image ==  false) {
+      $image = "null";
+    }
     $row->product_variant_image_link = $image;
     $row->product_variant_currency = get_woocommerce_currency(); 
     $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
@@ -209,13 +241,20 @@ function product_archive($post_id) {
     $response = [];
     $productsArray = [];
     foreach($results as $row){  
-      $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
-      $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
-        $row->product_id = $synced[count($synced) - 1]->meta_value;
-        $array = (array) $row;
-        $product_id = $products->archive($array);
-        add_post_meta( $post_id, "test_archive", $product_id, false );
-        array_push($response, $product_id);
+      $env = get_option("sendy_fulfillment_environment");
+      $synced = [];
+      $synced_variant = [];
+      if ($env == "Test") {
+        $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id_test' and info.post_id = $row->id");
+        $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id_test' and info.post_id = $row->id");
+      } else {
+        $synced = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $row->id");
+        $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
+      }
+      $row->product_id = $synced[count($synced) - 1]->meta_value;
+      $array = (array) $row;
+      $product_id = $products->archive($array);
+      array_push($response, $product_id);
     }
     echo "<script>alert('Product archived successfully')</script>";
 }
@@ -228,13 +267,22 @@ function order_sync ($post_id) {
     FROM $wpdb->posts orders where orders.ID = $post_id ");
     $response = [];
     $products = [];
+    $env = get_option("sendy_fulfillment_environment");
     $payload = (object)[];
     foreach($results as $row){  
+        $env = get_option("sendy_fulfillment_environment");
         $order = wc_get_order($row->ID);
         foreach ($order->get_items() as $item_id => $item ) {
             $product_id = $item->get_product_id();
-            $sendy_products = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $product_id");
-            $sendy_product_variants = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $product_id");
+            $sendy_products = [];
+            $sendy_product_variants = [];
+            if ($env == "Test") {
+              $sendy_products = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id_test' and info.post_id = $product_id");
+              $sendy_product_variants = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id_test' and info.post_id = $product_id");
+            } else {
+              $sendy_products = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_id' and info.post_id = $product_id");
+              $sendy_product_variants = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $product_id");
+            }
             $sendy_product_id = $sendy_products[count($sendy_products) - 1]->meta_value;
             $sendy_product_variant_id = $sendy_product_variants[count($sendy_product_variants) - 1]->meta_value;
             $product = (object)[];
@@ -293,7 +341,7 @@ function order_sync ($post_id) {
         $payload->products = $products;
         $payload->destination = $destination;
         $order_id = $orders->place_order($payload);
-        add_post_meta( $post_id, "sendy_order_id", $order_id->order_id, false );
+        add_post_meta( $post_id, $env == "Test" ? 'sendy_order_id_test' : 'sendy_order_id', $order_id->order_id, false );
     }
     echo "<script>alert('Order created successfully')</script>";
 }
