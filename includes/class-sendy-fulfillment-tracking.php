@@ -34,10 +34,12 @@
         }
         if (!$sendy_order_id) {
             echo("<script>console.log('No order');</script>");
-        } else if($displayTracking == '1' && $createFulfillmentOrder == '1') {
+        } else {
+            if($displayTracking == '1' && $createFulfillmentOrder == '1') {
             echo("<script>console.log('No order');</script>");
             add_tracking_data($sendy_order_id);
         }
+    }
   }
 
   function add_tracking_data($sendy_order_id){
