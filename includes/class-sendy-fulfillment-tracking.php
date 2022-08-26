@@ -22,7 +22,6 @@
         }
         foreach($results as $row){
             if ($row->meta_key == $order_id) {
-                echo("<script>console.log('PHP: " . $sendy_order_id . "');</script>");
                 $sendy_order_id = $row->meta_value;
             }
         }
@@ -30,7 +29,6 @@
             $displayTracking = get_option('sendy_fulfillment_include_tracking','0');
             $createFulfillmentOrder = get_option('sendy_fulfillment_place_order_on_fulfillment','0');
             if($displayTracking == '1' && $createFulfillmentOrder == '1') {
-            echo("<script>console.log('Order created');</script>");
             add_tracking_data($sendy_order_id);
         }
     }
@@ -62,6 +60,13 @@
   function add_style()
     {
         wp_enqueue_style('styles', plugin_dir_url(__FILE__) . '../styles/index.css', false);
+        $style = "";
+        ?><script>
+            setTimeout(() => {
+                document.getElementById('sendy_fulfillment_delivery_address_long_field').style.display = 'none';
+                document.getElementById('sendy_fulfillment_delivery_address_lat_field').style.display = 'none';
+            }, 300);
+        </script><?php
     }
 
     add_action('wp_enqueue_scripts', 'add_style');
