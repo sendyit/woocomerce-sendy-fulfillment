@@ -64,6 +64,9 @@ function product_sync () {
         $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
       }
       $image = get_the_post_thumbnail_url($row->id);
+      if ($image ==  false) {
+        $image = "null";
+      }
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
@@ -127,6 +130,9 @@ function product_add ($post_id) {
       $product = wc_get_product($row->id);
       $row->product_name = $product->get_name(); 
       $image = get_the_post_thumbnail_url($row->id);
+      if ($image ==  false) {
+        $image = "null";
+      }
       $row->product_variant_image_link = $image;
       $row->product_variant_currency = get_woocommerce_currency(); 
       $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
@@ -188,6 +194,9 @@ function product_edit($post_id) {
       $synced_variant = $wpdb->get_results("SELECT info.meta_value, info.post_id from {$wpdb->postmeta} info where info.meta_key = 'sendy_product_variant_id' and info.post_id = $row->id");
     }
     $image = get_the_post_thumbnail_url($row->id);
+    if ($image ==  false) {
+      $image = "null";
+    }
     $row->product_variant_image_link = $image;
     $row->product_variant_currency = get_woocommerce_currency(); 
     $sale_price = $wpdb->get_results("SELECT info.meta_value from {$wpdb->postmeta} info where info.meta_key = '_sale_price' and info.post_id = $row->id");
