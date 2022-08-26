@@ -28,6 +28,8 @@ class Sendy_Fulfillment_Deactivator {
 		delete_option('sendy_fulfillment_api_key_live');
 		delete_option('sendy_fulfillment_api_key_test');
 
+		delete_option('sendy_fulfillment_sync_all_products');
+
 
 
 
