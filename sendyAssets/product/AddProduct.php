@@ -105,10 +105,10 @@ function getVariantId($default_data, $product_id, $url){
 
 function clean_up_quantity($quantity){
 
-if( $quantity == 'KILOGRAM') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
-else if( $quantity == 'GRAM') { return array('unit'=>'GRAM','ratio'=>1 ); }
-else if( $quantity == 'POUND') { return array('unit'=>'KILOGRAM','ratio'=>0.45 ); }
-else if( $quantity == 'OUNCE') { return array('unit'=>'KILOGRAM','ratio'=>0.03 ); }
+if( $quantity == 'kg') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
+else if( $quantity == 'g') { return array('unit'=>'GRAM','ratio'=>1 ); }
+else if( $quantity == 'lbs') { return array('unit'=>'KILOGRAM','ratio'=>0.45 ); }
+else if( $quantity == 'oz') { return array('unit'=>'KILOGRAM','ratio'=>0.03 ); }
 else { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
 
 
