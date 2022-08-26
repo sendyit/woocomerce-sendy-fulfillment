@@ -2,19 +2,16 @@
   $displayTracking = get_option('sendy_fulfillment_include_tracking','0');
   $createFulfillmentOrder = get_option('sendy_fulfillment_place_order_on_fulfillment','0');
 
-  if($displayTracking == '1' && $createFulfillmentOrder == '1') {
-    add_action('woocommerce_thankyou', 'add_tracking_data');
-  }
+  add_action('woocommerce_thankyou', 'get_sendy_order');
 
-  function add_tracking_data($order_id){
-      echo '<h2>Track Order</h2>';
+//   if($displayTracking == '1' && $createFulfillmentOrder == '1') {
+    // add_action('woocommerce_thankyou', 'add_tracking_data');
+//   }
 
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
-
-        $sendy_order_id = '';
+  function get_sendy_order($order_id) {
+      $sendy_order_id = '';
 
         global $wpdb;
-        global $woocommerce;
 
         $results = $wpdb->get_results( "SELECT
                 orders.meta_id as id,
@@ -31,9 +28,22 @@
         }
         foreach($results as $row){
             if ($row->meta_key == $order_id) {
+                echo("<script>console.log('PHP: " . $sendy_order_id . "');</script>");
                 $sendy_order_id = $row->meta_value;
             }
         }
+        if (!$sendy_order_id) {
+            echo("<script>console.log('No order');</script>");
+        } else if($displayTracking == '1' && $createFulfillmentOrder == '1') {
+            echo("<script>console.log('No order');</script>");
+            add_tracking_data($sendy_order_id);
+        }
+  }
+
+  function add_tracking_data($sendy_order_id){
+      echo '<h2>Track Order</h2>';
+
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
         $data = array('order_id'=>$sendy_order_id);
 
