@@ -5,7 +5,6 @@ function add_js_scripts()
         wp_enqueue_script('ajax-script', plugin_dir_url(__FILE__) . '../scripts/sendy-fulfillment-locations.js', array('jquery'), '1.0', true);
         wp_localize_script('ajax-script', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
 
-//
  $woocommerce_ship_to_destination = get_option('woocommerce_ship_to_destination');
  $current_user_id = get_current_user_id();
 
@@ -40,7 +39,6 @@ function add__delivery_address_field( $fields ) {
 		'required'     => true,
 		'class'        => array( 'form-row-wide', 'my-custom-class' ),
 		'priority'     => 20
-		//'placeholder'  => 'Enter a delivery address',
 	);
 
   $fields[ 'sendy_fulfillment_delivery_address_lat' ]   = array(
@@ -49,7 +47,6 @@ function add__delivery_address_field( $fields ) {
     'type' => 'hidden',
     'class'        => array( 'form-row-wide', 'my-custom-class' ),
     'priority'     => 20
-    //'placeholder'  => 'Enter a delivery address',
   );
 
   $fields[ 'sendy_fulfillment_delivery_address_long' ]   = array(
@@ -58,7 +55,6 @@ function add__delivery_address_field( $fields ) {
     'type' => 'hidden',
     'class'        => array( 'form-row-wide', 'my-custom-class' ),
     'priority'     => 20
-    //'placeholder'  => 'Enter a delivery address',
   );
 
 	return $fields;

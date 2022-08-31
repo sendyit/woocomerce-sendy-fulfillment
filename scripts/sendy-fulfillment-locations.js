@@ -2,15 +2,8 @@ let script = document.createElement('script');
 script.src = 'https://maps.googleapis.com/maps/api/js?&libraries=places&key=AIzaSyD5y2Y1zfyWCWDEPRLDBDYuRoJ8ReHYXwY&callback=initMap';
 document.head.appendChild(script);
 
-function initMap() { }
 (function ($) {
     'use strict';
-
-    $(() => {
-        initMap = function () {
-          //  $('#sendy_fulfillment_delivery_address').val('');
-        }
-    });
 
     $('#sendy_fulfillment_delivery_address').keyup(function () {
         if (typeof google === 'object' && typeof google.maps === 'object') {
