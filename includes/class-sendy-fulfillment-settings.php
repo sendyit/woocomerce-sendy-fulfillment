@@ -160,7 +160,7 @@ You can use any business name but we advise you to use the same name as on the S
                     <?php
                         $options = get_option( 'sendy_fulfillment_environment' );
                     ?>
-                    <select class="sendy-custom-input" name='sendy_fulfillment_environment'>
+                    <select class="sendy-custom-input" name='sendy_fulfillment_environment' <?php echo $_SERVER['HTTP_HOST'] == 'https://demo.sendyit.com/' ? 'disabled' : '';?>>
                         <option value='Test' <?php selected( $options, 'Test' ); ?>>Test</option>
                         <option value='Live' <?php selected( $options, 'Live' ); ?>>Live</option>
                     </select>
