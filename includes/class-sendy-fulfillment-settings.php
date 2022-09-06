@@ -131,25 +131,7 @@ You can use any business name but we advise you to use the same name as on the S
               <td style="width:100px;" scope="row">Business Name</td>
               <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_name')); ?>" /></td>
               </tr>
-                <tr valign="top">
-                <td scope="row">API Key</td>
-                <td><input class="sendy-custom-input" readonly type="text" name="sendy_fulfillment_api_key" value="<?php
-
-                if(get_option('sendy_fulfillment_environment') == 'Live')
-                {
-                  echo get_option('sendy_fulfillment_api_key_live');
-
-                }
-                else
-                {
-                   echo get_option('sendy_fulfillment_api_key_test');
-                }
-
-
-                 ?>" /></td>
-                </tr>
-
-                <tr valign="top">
+              <tr valign="top">
                 <td scope="row">API Username</td>
                 <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_username_live" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username_live')); ?>" /></td>
                 </tr>
@@ -165,7 +147,7 @@ You can use any business name but we advise you to use the same name as on the S
                         <option value='Live' <?php selected( $options, 'Live' ); ?>>Live</option>
                     </select>
                 </td>
-                </tr>
+              </tr>
             </table>
 
             <?php submit_button(); ?>
