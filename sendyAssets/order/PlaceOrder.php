@@ -8,6 +8,7 @@ function PlaceOrder($default_data, $data, $url){
   $archive_product_data = '{
   "api_username": "' . $default_data['apiusername'] . '",
   "api_key": "' . $default_data['apiKey'] . '",
+  "business_email": "' . $data->business_email . '",
   "means_of_payment": {
         "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
         "means_of_payment_id": null,

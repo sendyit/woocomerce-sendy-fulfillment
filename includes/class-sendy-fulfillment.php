@@ -17,8 +17,6 @@ class Sendy_Fulfillment {
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
 
 	}
 
@@ -26,8 +24,6 @@ class Sendy_Fulfillment {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sendy-fulfillment-loader.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-sendy-fulfillment-i18n.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-sendy-fulfillment-admin.php';
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-sendy-fulfillment-public.php';
 
 		$this->loader = new Sendy_Fulfillment_Loader();
 
@@ -41,24 +37,6 @@ class Sendy_Fulfillment {
 
 	}
 
-	private function define_admin_hooks() {
-
-		$plugin_admin = new Sendy_Fulfillment_Admin( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
-
-    }
-
-	private function define_public_hooks() {
-
-		$plugin_public = new Sendy_Fulfillment_Public( $this->get_plugin_name(), $this->get_version() );
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
-	}
 
 	public function run() {
 		$this->loader->run();

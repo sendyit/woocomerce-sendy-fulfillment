@@ -295,6 +295,7 @@ function order_sync ($post_id) {
         }
         $destination = (object)[];
         $biz_name = get_option('sendy_fulfillment_biz_name', '');
+        $biz_email = get_option("sendy_fulfillment_biz_email", '');
         $business_label = '';
         if ($biz_name != '') {
           $business_label = ' (Wordpress order by ' . $biz_name . ')';
@@ -338,6 +339,7 @@ function order_sync ($post_id) {
           $all_notes = "No notes";
         }
         $destination->delivery_instructions = $all_notes;
+        $payload->business_email = $biz_email;
         $payload->products = $products;
         $payload->destination = $destination;
         $order_id = $orders->place_order($payload);

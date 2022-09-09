@@ -20,6 +20,7 @@ class Sendy_Fulfillment_Deactivator {
 		delete_option('sendy_fulfillment_api_key');
 
 		delete_option('sendy_fulfillment_biz_name');
+		delete_option('sendy_fulfillment_biz_email');
 		delete_option('sendy_fulfillment_delivery_info');
 
 		delete_option('sendy_fulfillment_api_username_live');
