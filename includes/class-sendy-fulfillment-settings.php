@@ -19,7 +19,7 @@ function register_my_cool_plugin_settings()
     register_setting('plugin-api-settings', 'sendy_fulfillment_api_username_live');
     register_setting('plugin-api-settings', 'sendy_fulfillment_environment');
     register_setting('plugin-api-settings', 'sendy_fulfillment_biz_name');
-
+    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_email');
 
 
 
@@ -131,6 +131,10 @@ You can use any business name but we advise you to use the same name as on the S
               <td style="width:100px;" scope="row">Business Name</td>
               <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_name')); ?>" /></td>
               </tr>
+                <tr valign="top">
+                    <td style="width:100px;" scope="row">Business Email</td>
+                    <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_email" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_email')); ?>" /></td>
+                </tr>
                 <tr valign="top">
                 <td scope="row">API Key</td>
                 <td><input class="sendy-custom-input" readonly type="text" name="sendy_fulfillment_api_key" value="<?php
