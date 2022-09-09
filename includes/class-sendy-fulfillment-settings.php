@@ -169,7 +169,7 @@ You can use any business name but we advise you to use the same name as on the S
                         <option value='Live' <?php selected( $options, 'Live' ); ?>>Live</option>
                     </select>
                 </td>
-                </tr>
+              </tr>
             </table>
 
             <?php submit_button(); ?>
