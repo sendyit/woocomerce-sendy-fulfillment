@@ -6,20 +6,21 @@ Class FulfillmentProduct {
         //product f(x) includes
         require_once ('product/AddProduct.php');
         require_once ('product/EditProduct.php');
-        require_once ('product/ArchiveProduct.php');
+        require_once ('product/UnlinkProduct.php');
         //order f(x) includes
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
         //for staging default apiusername to B-IGY-3791 (universal username on staging)
         $this->default_data['apiKey'] = $this->get_apikey();
         $this->default_data['apiusername'] = $this->get_apiusername();
+        $this->default_data['channel_id'] = $this->get_saleschannelid();
         $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity', 1);
         $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type', 'KILOGRAMS');
         $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency', 'KES'); //defaulting to KES
         $this->default_data['environment'] = get_option('sendy_fulfillment_environment');
         $this->default_data['default_means_of_payment'] = 'MPESA'; //currently defaulting to mpesa
-        $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
-        $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
+        $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v2';
+        $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v2';
         $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
         $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
     }
@@ -27,7 +28,6 @@ Class FulfillmentProduct {
         if (get_option('sendy_fulfillment_environment') == 'Live') {
             return get_option('sendy_fulfillment_api_username_live');
         } else {
-          //  return 'B-IGY-3791';
           return get_option('sendy_fulfillment_api_username_test');
         }
       }
@@ -37,6 +37,14 @@ Class FulfillmentProduct {
       } else {
 
           return get_option('sendy_fulfillment_api_key_test');
+      }
+
+    }
+    function get_saleschannelid() {
+      if (get_option('sendy_fulfillment_environment') == 'Live') {
+          return get_option('sendy_fulfillment_sales_channel_id_live');
+      } else {
+          return get_option('sendy_fulfillment_sales_channel_id_test');
       }
 
     }
@@ -76,8 +84,8 @@ Class FulfillmentProduct {
         return $response;
     }
     public function archive($data) {
-        $url = $this->get_link('product-status');
-        $response = ArchiveProduct($this->default_data, $data, $url);
+        $url = $this->get_link('unlink-product');
+        $response = UnlinkProduct($this->default_data, $data, $url);
         return $response;
     }
     function place_order($data) {
