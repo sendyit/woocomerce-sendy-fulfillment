@@ -50,11 +50,8 @@ $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
 
       $response_data = $resp_json->data;
 
-
- $product_variant_id = getVariantId($default_data, $response_data->productId, $product_details_url);
-
  $response_data_final['product_id'] = $response_data->productId;
- $response_data_final['product_variant_id'] = $product_variant_id;
+ $response_data_final['product_variant_id'] = $response_data->product->product_variants[0]->product_variant_id;
 
         return $response_data_final;
     } else {
