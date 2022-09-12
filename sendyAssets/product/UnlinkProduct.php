@@ -24,7 +24,7 @@ function UnlinkProduct($default_data, $data, $url) {
     //echo $resp;
     $resp_json = json_decode($resp);
 
-    if ($resp_json->message == 'Product archived successfully') {
+    if ($resp_json->message == 'Product unlinked from sales channel successfully') {
 
         return $resp_json->data;
     } else {
