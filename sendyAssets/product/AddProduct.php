@@ -58,7 +58,7 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
 
 
 function getVariantId($default_data, $product_id, $url){
-  $add_channel_product_data = '{
+  $fetch_channel_product_data = '{
   "api_username": "' . $default_data['apiusername'] . '",
   "api_key": "' . $default_data['apiKey'] . '",
   "channel_id": "' . $default_data['channel_id'] . '",
@@ -70,7 +70,7 @@ function getVariantId($default_data, $product_id, $url){
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   $headers = array("Accept: application/json", "Content-Type: application/json",);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = $add_channel_product_data;
+  $data = $fetch_channel_product_data;
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
   //for debug only!
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
