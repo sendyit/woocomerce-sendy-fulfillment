@@ -1,14 +1,6 @@
 <?php
 
-function ArchiveProduct($default_data, $data, $url) {
-
-    $archive_product_data = '{
-    "api_username": "' . $default_data['apiusername'] . '",
-    "api_key": "' . $default_data['apiKey'] . '",
-    "product_id": "' . $data['product_id'] . '",
-    "status": "archive"
-    }';
-
+function UnlinkProduct($default_data, $data, $url) {
     $unlink_channel_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
@@ -32,7 +24,7 @@ function ArchiveProduct($default_data, $data, $url) {
     //echo $resp;
     $resp_json = json_decode($resp);
 
-    if ($resp_json->message == 'Product unlinked from sales channel successfully') {
+    if ($resp_json->message == 'Product archived successfully') {
 
         return $resp_json->data;
     } else {

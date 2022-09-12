@@ -6,7 +6,7 @@ Class FulfillmentProduct {
         //product f(x) includes
         require_once ('product/AddProduct.php');
         require_once ('product/EditProduct.php');
-        require_once ('product/ArchiveProduct.php');
+        require_once ('product/UnlinkProduct.php');
         //order f(x) includes
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
@@ -19,9 +19,8 @@ Class FulfillmentProduct {
         $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency', 'KES'); //defaulting to KES
         $this->default_data['environment'] = get_option('sendy_fulfillment_environment');
         $this->default_data['default_means_of_payment'] = 'MPESA'; //currently defaulting to mpesa
-        $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v1';
-        $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v1';
-        $this->default_data['staging_v2_api_link'] = 'https://fulfillment-api-test.sendyit.com/v2';
+        $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v2';
+        $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v2';
         $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
         $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
     }
@@ -53,8 +52,7 @@ Class FulfillmentProduct {
         if ($this->default_data['environment'] == 'Live') {
             return $this->default_data['live_api_link'] . '/' . $append;
         } else {
-            // return $this->default_data['staging_api_link'] . '/' . $append;
-            return $this->default_data['staging_v2_api_link'] . '/' . $append;
+            return $this->default_data['staging_api_link'] . '/' . $append;
         }
     }
     function get_tracking_link($append) {
@@ -86,11 +84,8 @@ Class FulfillmentProduct {
         return $response;
     }
     public function archive($data) {
-        // $url = $this->get_link('product-status');
-
-        //sales channel unlink product
         $url = $this->get_link('unlink-product');
-        $response = ArchiveProduct($this->default_data, $data, $url);
+        $response = UnlinkProduct($this->default_data, $data, $url);
         return $response;
     }
     function place_order($data) {
