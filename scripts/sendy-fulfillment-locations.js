@@ -7,6 +7,8 @@ document.head.appendChild(script);
 
     $('#sendy_fulfillment_delivery_address').keyup(function () {
         if (typeof google === 'object' && typeof google.maps === 'object') {
+            $('#sendy_fulfillment_delivery_address_lat').val('');
+            $('#sendy_fulfillment_delivery_address_long').val('');
             let country = ['ke', 'ug', 'ng', 'ci'];
             let options = {
                 componentRestrictions: { country: country },
@@ -34,7 +36,6 @@ document.head.appendChild(script);
 
 
     function saveLocation(to_name, to_lat, to_long) {
-        console.log(to_name,to_lat, to_long)
         $.ajax({
             dataType: 'json',
             url: ajax_object.ajaxurl,
