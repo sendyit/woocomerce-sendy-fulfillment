@@ -11,7 +11,7 @@ function PlaceOrder($default_data, $data, $url){
   "channel_id": "' . $default_data['channel_id'] . '",
   "means_of_payment": {
         "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
-        "means_of_payment_id": null,
+        "means_of_payment_id": "",
         "participant_type": "SELLER",
         "participant_id": "' . $default_data['apiusername'] . '"
     },
@@ -35,8 +35,7 @@ function PlaceOrder($default_data, $data, $url){
   //echo $resp;
   $resp_json = json_decode($resp);
 
-  if ($resp_json->message == 'Order created successfully') {
-
+  if ($resp_json->message == 'Fulfilment request created successfully on sales channel') {
       return $resp_json->data;
   } else {
       return ($resp_json->message);
