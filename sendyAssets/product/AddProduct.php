@@ -1,15 +1,12 @@
 <?php
 
-//function to add products
-
 function AddProduct($default_data, $data, $url, $product_details_url) {
+    $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
 
-
-$quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
-
-    $add_product_data = '{
+    $add_channel_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
+    "channel_id": "' . $default_data['channel_id'] . '",
     "product_name": "' . $data['product_name'] . '",
     "product_description": "' . $data['product_description'] . '",
     "product_variants": [
@@ -25,16 +22,13 @@ $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
     ]
     }';
 
-    //echo $add_product_data;
-    //echo $url;
-
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $headers = array("Accept: application/json", "Content-Type: application/json",);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $data = $add_product_data;
+    $data = $add_channel_product_data;
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     //for debug only!
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -61,25 +55,19 @@ $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
 
 
 function getVariantId($default_data, $product_id, $url){
-
-
-
-
-  //echo $url;
-  $add_product_data = '{
+  $fetch_channel_product_data = '{
   "api_username": "' . $default_data['apiusername'] . '",
   "api_key": "' . $default_data['apiKey'] . '",
+  "channel_id": "' . $default_data['channel_id'] . '",
   "product_id": "' . $product_id . '"
   }';
-  // echo '<pre>' . $add_product_data . '</pre>';
-  // echo 'adding product';
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_URL, $url);
   curl_setopt($curl, CURLOPT_POST, true);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   $headers = array("Accept: application/json", "Content-Type: application/json",);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = $add_product_data;
+  $data = $fetch_channel_product_data;
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
   //for debug only!
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -87,14 +75,12 @@ function getVariantId($default_data, $product_id, $url){
   $resp = curl_exec($curl);
   // curl_close($curl);
 
-  //echo '<br><br>response '.$resp;
   $resp_json = json_decode($resp);
 
   if($resp_json->message == 'Product details fetched successfully'){
 
     return $resp_json->data->product_variants[0]->product_variant_id;
-  }else{
-
+  } else {
     return 'not found';
   }
 

@@ -4,13 +4,12 @@
 
 function EditProduct($default_data, $data, $url) {
 
-    //echo $url;
-
     $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
 
-    $add_product_data = '{
+    $edit_channel_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
+    "channel_id": "' . $default_data['channel_id'] . '",
     "product_name": "' . $data['product_name'] . '",
     "product_id": "' . $data['product_id'] . '",
     "product_description": "' . $data['product_description'] . '",
@@ -35,7 +34,7 @@ function EditProduct($default_data, $data, $url) {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $headers = array("Accept: application/json", "Content-Type: application/json",);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $data = $add_product_data;
+    $data = $edit_channel_product_data;
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     //for debug only!
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);

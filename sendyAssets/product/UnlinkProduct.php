@@ -1,14 +1,11 @@
 <?php
 
-//function to add products
-
-function ArchiveProduct($default_data, $data, $url) {
-
-    $archive_product_data = '{
+function UnlinkProduct($default_data, $data, $url) {
+    $unlink_channel_product_data = '{
     "api_username": "' . $default_data['apiusername'] . '",
     "api_key": "' . $default_data['apiKey'] . '",
-    "product_id": "' . $data['product_id'] . '",
-    "status": "archive"
+    "channel_id": "' . $default_data['channel_id'] . '",
+    "product_id": "' . $data['product_id'] . '"
     }';
 
     $curl = curl_init($url);
@@ -17,7 +14,7 @@ function ArchiveProduct($default_data, $data, $url) {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $headers = array("Accept: application/json", "Content-Type: application/json",);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $data = $archive_product_data;
+    $data = $unlink_channel_product_data;
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     //for debug only!
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -27,7 +24,7 @@ function ArchiveProduct($default_data, $data, $url) {
     //echo $resp;
     $resp_json = json_decode($resp);
 
-    if ($resp_json->message == 'Product archived successfully') {
+    if ($resp_json->message == 'Product unlinked from sales channel successfully') {
 
         return $resp_json->data;
     } else {
