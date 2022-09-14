@@ -10,6 +10,8 @@ Class FulfillmentProduct {
         //order f(x) includes
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
+        //migrate f(x) includes
+        require_once ('migrate/migrateAccount.php');
         //for staging default apiusername to B-IGY-3791 (universal username on staging)
         $this->default_data['apiKey'] = $this->get_apikey();
         $this->default_data['apiusername'] = $this->get_apiusername();
@@ -97,6 +99,11 @@ Class FulfillmentProduct {
         $url = $this->get_link('orders/tracking/' . $data['order_id']);
         $tracking_url = $this->get_tracking_link($data['order_id']);
         $response = TrackOrder($this->default_data, $data, $url, $tracking_url);
+        return $response;
+    }
+    function migrate_account($data) {
+        $url = $this->get_link('saleschannel-migrate');
+        $response = migrateAccount($this->default_data, $data, $url);
         return $response;
     }
     function test_settings($data) {

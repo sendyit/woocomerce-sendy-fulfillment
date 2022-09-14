@@ -30,8 +30,12 @@ class Sendy_Fulfillment_Deactivator {
 		delete_option('sendy_fulfillment_api_key_test');
 
 		delete_option('sendy_fulfillment_sync_all_products');
+		delete_option('sendy_fulfillment_channel_id');
+		delete_option('sendy_fulfillment_api_username');
+
 
 		delete_option('sendy_fulfillment_sales_channel_id_test');
+		delete_option('sendy_fulfillment_sales_channel_id_live');
 
 
 
