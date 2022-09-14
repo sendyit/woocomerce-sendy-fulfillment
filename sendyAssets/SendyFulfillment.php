@@ -96,9 +96,8 @@ Class FulfillmentProduct {
         return $response;
     }
     function track_order($data) {
-        $url = $this->get_link('orders/tracking/' . $data['order_id']);
-        $tracking_url = $this->get_tracking_link($data['order_id']);
-        $response = TrackOrder($this->default_data, $data, $url, $tracking_url);
+        $url = $this->get_link('track-order');
+        $response = TrackOrder($this->default_data, $data, $url);
         return $response;
     }
     function migrate_account($data) {
@@ -109,7 +108,6 @@ Class FulfillmentProduct {
     function test_settings($data) {
         $includedStuff = get_included_files();
         echo '<pre>';
-        //print_r($includedStuff);
         echo '</pre>';
         add_option('sendy_apiKey', 'uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
         echo 'testing settings';

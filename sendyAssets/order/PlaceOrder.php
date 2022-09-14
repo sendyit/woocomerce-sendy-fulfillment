@@ -10,11 +10,11 @@ function PlaceOrder($default_data, $data, $url){
   "api_key": "' . $default_data['apiKey'] . '",
   "channel_id": "' . $default_data['channel_id'] . '",
   "means_of_payment": {
-        "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
-        "means_of_payment_id": null,
-        "participant_type": "SELLER",
-        "participant_id": "' . $default_data['apiusername'] . '"
-    },
+      "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
+      "means_of_payment_id": null,
+      "participant_type": "SELLER",
+      "participant_id": "' . $default_data['apiusername'] . '"
+  },
   "products": ' . json_encode($data->products) . ',
   "destination": ' . json_encode($data->destination) . '
   }';
