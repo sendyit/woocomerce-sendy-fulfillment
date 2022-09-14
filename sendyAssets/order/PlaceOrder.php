@@ -5,10 +5,10 @@ function PlaceOrder($default_data, $data, $url){
 
 
 
-  $archive_product_data = '{
+  $create_order_data = '{
   "api_username": "' . $default_data['apiusername'] . '",
   "api_key": "' . $default_data['apiKey'] . '",
-  "business_email": "' . $data->business_email . '",
+  "channel_id": "' . $default_data['channel_id'] . '",
   "means_of_payment": {
         "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
         "means_of_payment_id": null,
@@ -19,16 +19,13 @@ function PlaceOrder($default_data, $data, $url){
   "destination": ' . json_encode($data->destination) . '
   }';
 
-  //echo '<pre>'.$archive_product_data.'</pre>';
-  //return 'done';
-
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_URL, $url);
   curl_setopt($curl, CURLOPT_POST, true);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   $headers = array("Accept: application/json", "Content-Type: application/json",);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = $archive_product_data;
+  $data = $create_order_data;
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
   //for debug only!
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
