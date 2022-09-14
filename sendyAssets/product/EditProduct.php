@@ -44,7 +44,7 @@ function EditProduct($default_data, $data, $url) {
     $resp_json = json_decode($resp);
     //echo $resp;
     //var_dump($resp_json);
-    if ($resp_json->message == 'Product edited successfully') {
+    if ($resp_json->message == 'Product edited successfully on sales channel') {
         return ($resp_json->data);
     } else {
         return ($resp_json->message);

@@ -40,12 +40,12 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
 
     $resp_json = json_decode($resp);
 
-    if ($resp_json->message == 'Product added successfully') {
+    if ($resp_json->message == 'Product added successfully on sales channel') {
 
       $response_data = $resp_json->data;
 
- $response_data_final['product_id'] = $response_data->productId;
- $response_data_final['product_variant_id'] = $response_data->product->product_variants[0]->product_variant_id;
+      $response_data_final['product_id'] = $response_data->product->product_id;
+      $response_data_final['product_variant_id'] = $response_data->product->product_variants[0]->product_variant_id;
 
         return $response_data_final;
     } else {
