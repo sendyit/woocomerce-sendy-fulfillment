@@ -89,7 +89,7 @@ Class FulfillmentProduct {
         return $response;
     }
     function place_order($data) {
-        $url = $this->get_link('orders');
+        $url = $this->get_link('create-fulfilment-request');
         $response = PlaceOrder($this->default_data, $data, $url);
         return $response;
     }
