@@ -46,7 +46,7 @@
         $response = $FulfillmentProduct->track_order($data);
         
         $orderStatus = "REQUEST PROCESSING";
-        if (is_object($response)) {
+        if (is_array($response)) {
           $orderStatus = $response['order_status'];
         }
 
