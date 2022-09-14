@@ -44,16 +44,12 @@
         $FulfillmentProduct = new FulfillmentProduct();
 
         $response = $FulfillmentProduct->track_order($data);
-
-        $orderStatus = $response['delivery_status'];
-
-        $trackingLink = $response['delivery_tracking_link'];
+        $orderStatus = $response['order_status'];
 
         echo '
             <div class="tracking-block">
             <div class="tracking-block--inner">
                 <h4 class="tracking-status">'.$orderStatus.'</h4>
-                <a href="'.$trackingLink.'" target="_blank"><button class="track-order-button">Track Order</button></a>
             </div> </div><br></br>
         ';
   }

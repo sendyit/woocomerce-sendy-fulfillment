@@ -1,17 +1,16 @@
 
 <?
 
-function TrackOrder($default_data, $data, $url,$tracking_url){
+function TrackOrder($default_data, $data, $url){
 
 
 
-  $archive_product_data = '{
+  $track_order_data = '{
   "api_username": "' . $default_data['apiusername'] . '",
-  "api_key": "' . $default_data['apiKey'] . '"
+  "api_key": "' . $default_data['apiKey'] . '",
+  "channel_id": "' . $default_data['channel_id'] . '",
+  "fulfilment_request_id": "' . $data['order_id'] . '"
   }';
-
-  //echo '<pre>'.$archive_product_data.'</pre>';
-  //return 'done';
 
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_URL, $url);
@@ -19,7 +18,7 @@ function TrackOrder($default_data, $data, $url,$tracking_url){
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
   $headers = array("Accept: application/json", "Content-Type: application/json",);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-  $data = $archive_product_data;
+  $data = $track_order_data;
   curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
   //for debug only!
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -29,36 +28,17 @@ function TrackOrder($default_data, $data, $url,$tracking_url){
 
 
   curl_close($curl);
-  //echo $resp;
   $resp_json = json_decode($resp);
-
   if ($resp_json->message == 'Tracking data retrieved successfully') {
 
-    $delivery_event =  $resp_json->data;
+    $request_event =  $resp_json->data->status;
 
+    //remove _ add spaces & capitalize -> "REQUEST_IN_PICKUP"
 
-    if(count($delivery_event) == 0){ $delivery_status = 'Order created';}
-    else{
-
-      //get the last item in array
-
-      $latest_delivery_log = $delivery_event[count($delivery_event)-1];
-
-      $latest_delivery_log_message = $latest_delivery_log->event_code;
-
-
-      $delivery_status = $latest_delivery_log_message;
-
-      //remove event.delivery remove . add spaces & capitalize
-
-      $delivery_status =
-      ucfirst(str_replace("."," ",str_replace("event.delivery.","",$latest_delivery_log_message)));
-
-    }
+    $request_status = ucfirst((str_replace("_"," ",$request_event)));
 
     $tracking_respond = array(
-      'delivery_status'=>$delivery_status,
-      'delivery_tracking_link' => $tracking_url
+      'order_status'=>$request_status
     );
 
       return $tracking_respond;
