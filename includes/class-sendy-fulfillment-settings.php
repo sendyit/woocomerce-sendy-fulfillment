@@ -1,4 +1,6 @@
 <?php
+require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
+
 // create custom plugin settings menu
 add_action('admin_menu', 'my_cool_plugin_create_menu');
 
@@ -22,7 +24,6 @@ function register_my_cool_plugin_settings()
     register_setting('plugin-api-settings', 'sendy_fulfillment_biz_email');
 
 
-
     //register inventory settings
     register_setting('inventory-settings', 'sendy_fulfillment_sync_products_on_add');
 
@@ -40,6 +41,33 @@ function register_my_cool_plugin_settings()
 
 function sendy_fulfillment_submenu_settings_page()
 {}
+
+function migrate_account() {
+    //migrate account to sales channel
+
+    global $woocommerce;
+    $WC_Countries = new WC_Countries();
+    $payload = array(
+        'country' => strtoupper(WC()->countries->countries[$WC_Countries->get_base_country()]),
+    );
+    $array = (array) $payload;
+    $migrate = new FulfillmentProduct();
+    if (get_option('sendy_fulfillment_environment') == 'Test') {
+        if (!get_option('sendy_fulfillment_sales_channel_id_test')) {
+            $channel_id = $migrate->migrate_account($array);
+            delete_option('sendy_fulfillment_sales_channel_id_test');
+            add_option('sendy_fulfillment_sales_channel_id_test', $channel_id->channel_id);
+        }
+    } else {
+        if (!get_option('sendy_fulfillment_sales_channel_id_live') || get_option('sendy_fulfillment_api_username_live') <> get_option('sendy_fulfillment_api_username')) {
+            $channel_id = $migrate->migrate_account($array);
+            delete_option('sendy_fulfillment_sales_channel_id_live');
+            delete_option('sendy_fulfillment_api_username');
+            add_option('sendy_fulfillment_sales_channel_id_live', $channel_id->channel_id);
+            add_option('sendy_fulfillment_api_username', get_option('sendy_fulfillment_api_username_live'));
+        }
+    }
+}
 
 function my_cool_plugin_settings_page()
 {
@@ -125,7 +153,12 @@ You can use any business name but we advise you to use the same name as on the S
 
         <form method="post" action="options.php">
             <?php settings_fields('plugin-api-settings'); ?>
-            <?php do_settings_sections('plugin-api-settings'); ?>
+            <?php
+                do_settings_sections('plugin-api-settings');
+                if (get_option('sendy_fulfillment_api_username_live')) {
+                    migrate_account();
+                }
+            ?>
             <table class="form-table">
               <tr valign="top">
               <td style="width:100px;" scope="row">Business Name</td>

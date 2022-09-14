@@ -22,9 +22,6 @@ class Sendy_Fulfillment_Activator {
 		add_option('sendy_fulfillment_api_key_test','uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
 		add_option('sendy_fulfillment_api_username_test','B-IGY-3791');
 
-		//preset sales channel id
-		add_option('sendy_fulfillment_sales_channel_id_test','SC-QWE-9915');
-
 	}
 
 }
