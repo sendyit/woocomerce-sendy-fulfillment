@@ -44,7 +44,11 @@
         $FulfillmentProduct = new FulfillmentProduct();
 
         $response = $FulfillmentProduct->track_order($data);
-        $orderStatus = $response['order_status'];
+        
+        $orderStatus = "REQUEST PROCESSING";
+        if (is_object($response)) {
+          $orderStatus = $response['order_status'];
+        }
 
         echo '
             <div class="tracking-block">
