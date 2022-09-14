@@ -30,7 +30,7 @@ function process_action($post_id) {
           } else {
             product_add($row->id);
           }
-        } else if (($row->post_status == "wc-pending" || $row->post_status == "wc-processing") && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
+        } else if ($row->post_status == "wc-processing" && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
             order_sync($row->id);
         }
     }
@@ -110,7 +110,6 @@ function product_sync () {
           }
       }
     }
-    echo "<script>alert('Products syncing completed')</script>";
 }
 
 function product_add ($post_id) {
@@ -164,7 +163,6 @@ function product_add ($post_id) {
             array_push($response, $product_id);
       }
     }
-    echo "<script>alert('Product added successfully')</script>";
 }
 
 function product_edit($post_id) {
@@ -227,7 +225,6 @@ function product_edit($post_id) {
         array_push($response, $product_id);
     }
   }
-  echo "<script>alert('Product edited successfully')</script>";
 }
 
 function product_archive($post_id) {
@@ -256,7 +253,6 @@ function product_archive($post_id) {
       $product_id = $products->archive($array);
       array_push($response, $product_id);
     }
-    echo "<script>alert('Product archived successfully')</script>";
 }
 
 function order_sync ($post_id) {
@@ -332,9 +328,6 @@ function order_sync ($post_id) {
         if ($payment_on_delivery_status === "1") {
           $all_notes = $all_notes .". ". "Collect " . $order->get_currency() ." ". $total_amount . " on delivery";
         }
-        foreach($notes as $note){ 
-          $all_notes = $all_notes . ". " . $note->content;
-        }
         if ($all_notes == "") {
           $all_notes = "No notes";
         }
@@ -343,8 +336,7 @@ function order_sync ($post_id) {
         $payload->products = $products;
         $payload->destination = $destination;
         $order_id = $orders->place_order($payload);
-        add_post_meta( $post_id, $env == "Test" ? 'sendy_order_id_test' : 'sendy_order_id', $order_id->order_id, false );
+        add_post_meta( $post_id, $env == "Test" ? 'sendy_order_id_test' : 'sendy_order_id', $order_id->fulfilment_requests[0]->fulfilment_request_id, false );
     }
-    echo "<script>alert('Order created successfully')</script>";
 }
 

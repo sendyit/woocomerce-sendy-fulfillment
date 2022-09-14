@@ -44,7 +44,6 @@
         $FulfillmentProduct = new FulfillmentProduct();
 
         $response = $FulfillmentProduct->track_order($data);
-
         $orderStatus = $response['order_status'];
 
         echo '
