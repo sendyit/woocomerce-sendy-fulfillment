@@ -45,6 +45,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-settings
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-inventory.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-location.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-tracking.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-orders.php';
 
 
 /**
