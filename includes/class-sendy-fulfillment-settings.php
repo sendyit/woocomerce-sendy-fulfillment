@@ -36,11 +36,35 @@ function register_my_cool_plugin_settings()
     register_setting('order-settings', 'sendy_fulfillment_delivery_info');
     register_setting('order-settings', 'sendy_fulfillment_include_tracking');
     register_setting('order-settings', 'sendy_fulfillment_include_collect_amount');
+    register_setting('order-settings', 'sendy_fulfillment_pickup_address_name');
+    register_setting('order-settings', 'sendy_fulfillment_pickup_address_lat');
+    register_setting('order-settings', 'sendy_fulfillment_pickup_address_long');
 }
 
 
 function sendy_fulfillment_submenu_settings_page()
 {}
+
+function add_pickup_scripts() {
+    wp_enqueue_script('ajax-script', plugin_dir_url(__FILE__) . '../scripts/sendy-fulfillment-pickup-locations.js', array('jquery'), '1.0', true);
+}
+
+function savePickUpLocation() {
+    if (get_option('sendy_fulfillment_pickup_address_name') <> get_option('sendy_fulfillment_pickup_address_name_alt')) {
+        $payload = array(
+            'description' => get_option('sendy_fulfillment_pickup_address_name'),
+            'longitude' => get_option('sendy_fulfillment_pickup_address_lat'),
+            'latitude' => get_option('sendy_fulfillment_pickup_address_long'),
+        );
+        $array = (array) $payload;
+        $migrate = new FulfillmentProduct();
+        $business_details = $migrate->save_pickup_address($array);
+        if ($business_details->business) {
+            delete_option('sendy_fulfillment_pickup_address_name_alt');
+            add_option('sendy_fulfillment_pickup_address_name_alt', $business_details->business->business_default_address->description);
+        }
+    }
+}
 
 function migrate_account() {
     //migrate account to sales channel
@@ -299,6 +323,10 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 <form method="post" action="options.php">
     <?php settings_fields('order-settings'); ?>
     <?php do_settings_sections('order-settings'); ?>
+    <?php 
+        add_pickup_scripts();
+        savePickUpLocation();
+    ?>
     <table class="form-table">
         <tr valign="top">
         <td style="width:200px;" scope="row">Place Order On Fulfillment </td>
@@ -331,6 +359,15 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         echo $html;?>
         <div class="description-reason"> When checked the rider will receive a note indicating the amount to collect from
         the customer </div>
+        </td>
+        </tr>
+
+        <tr valign="top">
+        <td scope="row">Pick Up Address </td>
+        <td>
+            <input type="text" style="width: 500px; height: 40px; border-color: #dddddd;" id="sendy_fulfillment_pickup_address" class="form-row-wide my-custom-class" name="sendy_fulfillment_pickup_address_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_pickup_address_name')); ?>" />
+            <input type="text" style="display: none;" id="sendy_fulfillment_pickup_address_lat" label="Pick up latitude" class="form-row-wide my-custom-class" name="sendy_fulfillment_pickup_address_lat" value="<?php echo esc_attr(get_option('sendy_fulfillment_pickup_address_lat')); ?>" />
+            <input type="text" style="display: none;" id="sendy_fulfillment_pickup_address_long" label="Pick up longitude" class="form-row-wide my-custom-class" name="sendy_fulfillment_pickup_address_long" value="<?php echo esc_attr(get_option('sendy_fulfillment_pickup_address_long')); ?>" />
         </td>
         </tr>
 

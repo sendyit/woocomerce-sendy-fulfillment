@@ -111,6 +111,11 @@ Class FulfillmentProduct {
         $response = migrateAccount($this->default_data, $data, $url);
         return $response;
     }
+    function save_pickup_address($data) {
+        $url = $this->get_link('pickup-address');
+        $response = savePickUpAddress($this->default_data, $data, $url);
+        return $response;
+    }
     function test_settings($data) {
         $includedStuff = get_included_files();
         echo '<pre>';
