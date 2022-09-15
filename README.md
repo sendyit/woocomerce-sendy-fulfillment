@@ -50,3 +50,10 @@ Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the 
 - Sync your products from your woocommerce store to the Sendy Fulfillment app, also adds ***sendy_product_id*** to your product metadata
 - Create a Fulfilment request on checkout
 - Add a delivery tracking button to the order confirmation page
+**2.0.0 (2022-09-20)**
+- Cancel deliveries on sendy
+- Create a sales channel for businesses
+- Create a Fulfilment request on a sales channel
+- Create pick up request if stock is low
+- Save pick up address
+- Add business email for error and success notifications
