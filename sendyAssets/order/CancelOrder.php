@@ -7,7 +7,7 @@ function CancelOrder($default_data, $data, $url){
     "api_key": "' . $default_data['apiKey'] . '",
     "channel_id": "' . $default_data['channel_id'] . '",
     "fulfilment_request_id": "' . $data['order_id'] . '",
-    "cancellation_reason": "' . $data['cancellation_reason'] . '",
+    "cancellation_reason": "' . $data['cancellation_reason'] . '"
   }';
 
   $curl = curl_init($url);
