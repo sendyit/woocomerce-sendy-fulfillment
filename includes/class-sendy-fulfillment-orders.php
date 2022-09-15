@@ -1,7 +1,23 @@
 <?php
 require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
-add_action( 'woocommerce_order_status_cancelled', 'cancel_fulfillment_request', 21, 1 );
+add_action( 'save_post', 'process_order' );
+
+function process_order($post_id) {
+    global $wpdb;
+    $results = $wpdb->get_results( "SELECT 
+    orders.ID as id,
+    orders.post_status,
+    orders.post_type
+    FROM {$wpdb->posts} orders 
+    where orders.ID = $post_id");
+    foreach($results as $row){  
+        if (($row->post_status == "trash" || $row->post_status == "wc-cancelled") && $row->post_type == "shop_order") {
+            cancel_fulfillment_request($post_id);
+        }
+    }
+}
+
 
 function cancel_fulfillment_request( $order_id ){
     
@@ -35,5 +51,4 @@ function cancel_fulfillment_request( $order_id ){
     );
     $response = $FulfillmentProduct->cancel_order($data);
 
-    echo '<pre>'.json_encode($response).'</pre>';
 }
