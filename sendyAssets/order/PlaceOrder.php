@@ -11,7 +11,7 @@ function PlaceOrder($default_data, $data, $url){
   "business_email": "' . $data->business_email . '",
   "means_of_payment": {
         "means_of_payment_type": "' . $default_data['default_means_of_payment'] . '",
-        "means_of_payment_id": null,
+        "means_of_payment_id": "",
         "participant_type": "SELLER",
         "participant_id": "' . $default_data['apiusername'] . '"
     },
