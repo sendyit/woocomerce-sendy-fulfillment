@@ -10,6 +10,7 @@ Class FulfillmentProduct {
         //order f(x) includes
         require_once ('order/PlaceOrder.php');
         require_once ('order/TrackOrder.php');
+        require_once ('order/CancelOrder.php');
         //migrate f(x) includes
         require_once ('migrate/migrateAccount.php');
         //for staging default apiusername to B-IGY-3791 (universal username on staging)
@@ -98,6 +99,11 @@ Class FulfillmentProduct {
     function track_order($data) {
         $url = $this->get_link('track-order');
         $response = TrackOrder($this->default_data, $data, $url);
+        return $response;
+    }
+    function cancel_order($data) {
+        $url = $this->get_link('cancel-order');
+        $response = CancelOrder($this->default_data, $data, $url);
         return $response;
     }
     function migrate_account($data) {
