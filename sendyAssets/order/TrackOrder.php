@@ -35,7 +35,7 @@ function TrackOrder($default_data, $data, $url){
 
     //remove _ add spaces & capitalize -> "REQUEST_IN_PICKUP"
 
-    $request_status = ucfirst((str_replace("_"," ",$request_event)));
+    $request_status = ucfirst(strtolower((str_replace("_"," ",$request_event))));
 
     $tracking_respond = array(
       'order_status'=>$request_status

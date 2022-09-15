@@ -23,7 +23,7 @@ function CancelOrder($default_data, $data, $url){
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
   $resp = curl_exec($curl);
   curl_close($curl);
-  echo $resp;
+//   echo $resp;
   $resp_json = json_decode($resp);
 
   if ($resp_json->message == 'Fulfillment request cancelled successfully') {
