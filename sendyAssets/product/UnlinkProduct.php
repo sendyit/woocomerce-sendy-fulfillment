@@ -1,28 +1,25 @@
 <?php
 
 function UnlinkProduct($default_data, $data, $url) {
-    $unlink_channel_product_data = '{
-    "api_username": "' . $default_data['apiusername'] . '",
-    "api_key": "' . $default_data['apiKey'] . '",
-    "channel_id": "' . $default_data['channel_id'] . '",
-    "product_id": "' . $data['product_id'] . '"
-    }';
 
-    $curl = curl_init($url);
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    $headers = array("Accept: application/json", "Content-Type: application/json",);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $data = $unlink_channel_product_data;
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    //for debug only!
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    $resp = curl_exec($curl);
-    // curl_close($curl);
-    //echo $resp;
-    $resp_json = json_decode($resp);
+    $unlink_channel_product_data = array(
+        'api_username' => $default_data['apiusername'],
+        'api_key' => $default_data['apiKey'],
+        'channel_id' => $default_data['channel_id'],
+        'product_id' => $data['product_id'],
+      );
+      
+      $args = array(
+          'body'        => $unlink_channel_product_data,
+          'timeout'     => '5000',
+          'redirection' => '5',
+          'httpversion' => '1.0',
+          'blocking'    => true,
+          'headers'     => array(),
+          'cookies'     => array(),
+      );
+      $response = wp_remote_post( $url, $args );
+      $resp_json = json_decode($response['body']);
 
     if ($resp_json->message == 'Product unlinked from sales channel successfully') {
 
