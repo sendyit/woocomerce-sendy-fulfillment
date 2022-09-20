@@ -36,7 +36,34 @@ function process_action($post_id) {
     }
 }
 
-function product_sync () {
+function product_count() {
+    global $wpdb;
+    $results = $wpdb->get_results( "SELECT 
+    products.ID as id,
+    products.post_name as product_name, 
+    products.post_content as product_description, 
+    products.post_excerpt as product_variant_description
+    FROM {$wpdb->posts} products 
+    where products.post_type = 'product' and not products.post_title = 'AUTO-DRAFT' and not products.post_status = 'trash'");
+    return count($results);
+}
+function synced_product_count() {
+  $env = get_option("sendy_fulfillment_environment");
+  $meta_key = $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id';
+  global $wpdb;
+  $results = $wpdb->get_results( "SELECT 
+  products.ID as id,
+  productIds.post_id,
+  products.post_name as product_name, 
+  products.post_content as product_description, 
+  products.post_excerpt as product_variant_description
+  FROM {$wpdb->posts} products 
+  INNER JOIN {$wpdb->postmeta} productIds ON products.ID=productIds.post_id
+  where products.post_type = 'product' and not products.post_title = 'AUTO-DRAFT' and not products.post_status = 'trash' and productIds.meta_key = '$meta_key'");
+  return count($results);
+}
+
+function product_sync ($type) {
     $env = get_option("sendy_fulfillment_environment");
     $products = new FulfillmentProduct();
     global $wpdb;
@@ -95,8 +122,10 @@ function product_sync () {
             $row->product_id = $synced[count($synced) - 1]->meta_value;
             $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
             $array = (array) $row;
-            $product_id = $products->edit($array);
-            array_push($response, $product_id);
+            if ($type ==  'all') {
+              $product_id = $products->edit($array);
+              array_push($response, $product_id);
+            }
           } else {
             $array = (array) $row;
             $product_id = $products->add($array);
