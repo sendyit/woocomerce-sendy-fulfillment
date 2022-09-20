@@ -2,26 +2,26 @@
 require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
 // create custom plugin settings menu
-add_action('admin_menu', 'my_cool_plugin_create_menu');
+add_action('admin_menu', 'sendy_fulfillment_create_menu');
 
-function my_cool_plugin_create_menu()
+function sendy_fulfillment_create_menu()
 {
     //create fulfillment menu and submenu
-    add_menu_page('Sendy Fulfillment Settings', 'Sendy Fulfillment', 'edit_themes', 'sendy-fulfillment', 'my_cool_plugin_settings_page', 'dashicons-menu', 'administrator');
+    add_menu_page('Sendy Fulfillment Settings', 'Sendy Fulfillment', 'edit_themes', 'sendy-fulfillment', 'sendy_fulfillment_settings_page', 'dashicons-menu', 'administrator');
     //add_submenu_page('sendy-fulfillment', 'Installation Guide', 'Installation Guide', 'edit_themes', 'sendy-fulfillment-installation-guide', 'sendy_fulfillment_submenu_settings_page');
 
     //call register settings function
-    add_action('admin_init', 'register_my_cool_plugin_settings');
+    add_action('admin_init', 'register_sendy_fulfillment_settings');
 }
 
-function register_my_cool_plugin_settings()
+function register_sendy_fulfillment_settings()
 {
     //register API settings
     //register_setting('plugin-api-settings', 'sendy_fulfillment_api_key');
-    register_setting('plugin-api-settings', 'sendy_fulfillment_api_username_live');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_api_username_live', function ( $value ) { return sendy_fulfillment_input_validation( $value, 'sendy_fulfillment_api_username_live', 'Sendy Fulfillment API Username' );});
     register_setting('plugin-api-settings', 'sendy_fulfillment_environment');
-    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_name');
-    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_email');
+    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_name', function ( $value ) { return sendy_fulfillment_input_validation( $value, 'sendy_fulfillment_biz_name', 'Sendy Fulfillment Business Name' );});
+    register_setting('plugin-api-settings', 'sendy_fulfillment_biz_email', function ( $value ) { return sendy_fulfillment_input_validation( $value, 'sendy_fulfillment_biz_email', 'Sendy Fulfillment Business Email' );});
 
 
     //register inventory settings
@@ -29,7 +29,7 @@ function register_my_cool_plugin_settings()
 
     register_setting('inventory-settings', 'sendy_fulfillment_default_currency');
     register_setting('inventory-settings', 'sendy_fulfillment_default_quantity_type');
-    register_setting('inventory-settings', 'sendy_fulfillment_default_quantity');
+    register_setting('inventory-settings', 'sendy_fulfillment_default_quantity', function ( $value ) { return sendy_fulfillment_input_validation( $value, 'sendy_fulfillment_default_quantity', 'Sendy Fulfillment Default Quantity' );});
 
     //register order settings
     register_setting('order-settings', 'sendy_fulfillment_place_order_on_fulfillment');
@@ -41,6 +41,28 @@ function register_my_cool_plugin_settings()
     register_setting('order-settings', 'sendy_fulfillment_pickup_address_long');
 }
 
+function sendy_fulfillment_input_validation( $value, $field, $name ) {
+    if ( empty( $value ) ) {
+        $value = get_option( $field ); // ignore the user's changes and use the old database value
+        add_settings_error( 'plugin-api-settings', "invalid_$field", "$name is required." );
+    } else if($field === 'sendy_fulfillment_biz_email') {
+        if(is_email($value)) {
+            $value = $value; 
+        } else {
+            $value = get_option( 'sendy_fulfillment_biz_email' ); 
+            add_settings_error( 'plugin-api-settings', "invalid_$field", "$name is invalid." );
+        }
+    } else {
+        if(preg_match( '/^[a-zA-Z0-9-]+$/', $value )) {
+            $value = $value;
+        } else {
+            $value = get_option( $field );
+            add_settings_error( 'plugin-api-settings', "invalid_$field", "$name is not acceptable." );
+        }
+    }
+
+    return $value;
+}
 
 function sendy_fulfillment_submenu_settings_page()
 {}
@@ -93,7 +115,7 @@ function migrate_account() {
     }
 }
 
-function my_cool_plugin_settings_page()
+function sendy_fulfillment_settings_page()
 {
 ?>
 <!--- css block maybe help me move to a file :) -->
@@ -136,7 +158,7 @@ function my_cool_plugin_settings_page()
 
 
 
-<div>  </div>
+<div> <?php settings_errors(); ?></div>
 
     <?php
     if (isset($_GET))
@@ -186,11 +208,11 @@ You can use any business name but we advise you to use the same name as on the S
             <table class="form-table">
               <tr valign="top">
               <td style="width:100px;" scope="row">Business Name</td>
-              <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_name')); ?>" /></td>
+              <td><input class="sendy-custom-input" type="text" id="sendy_fulfillment_biz_name" name="sendy_fulfillment_biz_name" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_name')); ?>" /></td>
               </tr>
                 <tr valign="top">
                     <td style="width:100px;" scope="row">Business Email</td>
-                    <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_biz_email" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_email')); ?>" /></td>
+                    <td><input class="sendy-custom-input" type="text" id="sendy_fulfillment_biz_email" name="sendy_fulfillment_biz_email" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_email')); ?>" /></td>
                 </tr>
                 <!-- <tr valign="top">
                 <td scope="row">API Key</td>
@@ -212,7 +234,7 @@ You can use any business name but we advise you to use the same name as on the S
 
                 <tr valign="top">
                 <td scope="row">API Username</td>
-                <td><input class="sendy-custom-input" type="text" name="sendy_fulfillment_api_username_live" value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username_live')); ?>" /></td>
+                <td><input class="sendy-custom-input" type="text" id="sendy_fulfillment_api_username_live" name="sendy_fulfillment_api_username_live" required value="<?php echo esc_attr(get_option('sendy_fulfillment_api_username_live')); ?>" /></td>
                 </tr>
 
                 <tr valign="top">
@@ -294,7 +316,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 
         <tr valign="top">
         <td scope="row">Default Quantity</td>
-        <td><input type="text" class="sendy-custom-input" name="sendy_fulfillment_default_quantity" value="<?php echo esc_attr(get_option('sendy_fulfillment_default_quantity')); ?>" /></td>
+        <td><input type="text" class="sendy-custom-input" id="sendy_fulfillment_default_quantity" name="sendy_fulfillment_default_quantity" value="<?php echo esc_attr(get_option('sendy_fulfillment_default_quantity')); ?>" /></td>
         </tr>
     </table>
 
