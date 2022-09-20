@@ -53,7 +53,7 @@ function sendy_fulfillment_input_validation( $value, $field, $name ) {
             add_settings_error( 'plugin-api-settings', "invalid_$field", "$name is invalid." );
         }
     } else {
-        if(preg_match( '/^[a-zA-Z0-9-]+$/', $value )) {
+        if(preg_match( '/^[a-zA-Z0-9- ]+$/', $value )) {
             $value = $value;
         } else {
             $value = get_option( $field );
