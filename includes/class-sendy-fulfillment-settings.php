@@ -53,7 +53,7 @@ function sendy_fulfillment_input_validation( $value, $field, $name ) {
             add_settings_error( 'plugin-api-settings', "invalid_$field", "$name is invalid." );
         }
     } else {
-        if(preg_match( '/^[a-zA-Z0-9-]+$/', $value )) {
+        if(preg_match( '/^[a-zA-Z0-9- ]+$/', $value )) {
             $value = $value;
         } else {
             $value = get_option( $field );
@@ -323,17 +323,46 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
     <?php submit_button(); ?>
 </form>
 <hr/>
-<p>Click the button below to sync all the products</p>
+<div style="margin-left: 20px;">
+    <p>Click the button below to sync all the products</p>
+</div>
 
   <?php
     if (isset($_POST['sync_all_products'])) {
-        product_sync();
+        product_sync('all');
     }
+    if (isset($_POST['sync_remaining_products'])) {
+        product_sync('remaining');
+    }
+    
   ?>
+  <p style="margin-left: 20px;">
+      <?php 
+    if (synced_product_count() <> product_count()) {
+        echo 'You have synced ' . synced_product_count() . '/' . product_count() . ' products';
+    } else if (synced_product_count() == product_count() && product_count() <> 0) {
+        echo 'You have synced all ' . product_count() . ' products';
+    } else if (synced_product_count() <> product_count() && synced_product_count() == 0) {
+        echo 'You haven`t synced your products';
+    }
+    ?>
+    </p>
+  <div style="display: flex;">
   <form method="post">
-    <input class="button button-sucess" type="button" id="sync_all_products" onclick="document.getElementById('sync_all_products').value = 'Syncing All Products'; document.getElementById('sync_all_products').setAttribute('disabled', ''); document.getElementById('sync_all_products_hidden').click();" value="Sync all products">
+    <input class="button button-sucess" type="button" id="sync_all_products" onclick="document.getElementById('sync_all_products').value = 'Syncing All Products'; document.getElementById('sync_all_products').setAttribute('disabled', ''); document.getElementById('sync_all_products_hidden').click();" value="Sync All Products">
     <input class="button button-sucess" style="display: none;" id="sync_all_products_hidden" type="submit" name="sync_all_products" value="Sync all products">
   </form>
+  <?php
+  if (synced_product_count() <> product_count() && synced_product_count() <> 0) {
+    ?>
+        <form method="post">
+            <input class="button button-sucess" type="button" id="sync_remaining_products" onclick="document.getElementById('sync_remaining_products').value = 'Syncing Remaining Products Only'; document.getElementById('sync_remaining_products').setAttribute('disabled', ''); document.getElementById('sync_remaining_products_hidden').click();" value="Sync Remaining Products Only">
+            <input class="button button-sucess" style="display: none;" id="sync_remaining_products_hidden" type="submit" name="sync_remaining_products" value="Sync remaining products">
+        </form>
+    </div>
+    <?php
+  }
+  ?>
 
             <?php
     } elseif ($active_tab == 'orders')
