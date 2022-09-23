@@ -27,7 +27,7 @@ document.head.appendChild(script);
                     let billing_address_1 = document.getElementById("billing_address_1").value;
                     if (billing_address_1.length < 1 ){  document.getElementById("billing_address_1").value =  to_name; }
 
-                    sendySaveLocation(to_name, to_lat, to_long);
+                    sendyFulfillmentSaveLocation(to_name, to_lat, to_long);
                 });
         } else {
             $.getScript("https://maps.googleapis.com/maps/api/js?&libraries=places&key=AIzaSyD5y2Y1zfyWCWDEPRLDBDYuRoJ8ReHYXwY&callback=initMap");
@@ -35,7 +35,7 @@ document.head.appendChild(script);
     });
 
 
-    function sendySaveLocation(to_name, to_lat, to_long) {
+    function sendyFulfillmentSaveLocation(to_name, to_lat, to_long) {
         $.ajax({
             dataType: 'json',
             url: ajax_object.ajaxurl,
