@@ -1,7 +1,7 @@
 <?php
 
-function AddProduct($default_data, $data, $url, $product_details_url) {
-    $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
+function sendyFulfillmentAddProduct($default_data, $data, $url, $product_details_url) {
+    $quantity_data = sendy_fulfillment_clean_up_quantity($data['product_variant_quantity_type']);
 
 
     $add_channel_product_data = array(
@@ -48,7 +48,7 @@ function AddProduct($default_data, $data, $url, $product_details_url) {
     }
 }
 
-function clean_up_quantity($quantity){
+function sendy_fulfillment_clean_up_quantity($quantity){
 
 if( $quantity == 'kg') { return array('unit'=>'KILOGRAM','ratio'=>1 ); }
 else if( $quantity == 'g') { return array('unit'=>'GRAM','ratio'=>1 ); }

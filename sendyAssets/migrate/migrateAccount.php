@@ -1,7 +1,7 @@
 
 <?
 
-function migrateAccount($default_data, $data, $url){
+function sendyFulfillmentMigrateAccount($default_data, $data, $url){
 
   $migrate_account_data = array(
     'api_username' => $default_data['apiusername'],
@@ -30,7 +30,7 @@ function migrateAccount($default_data, $data, $url){
 
 }
 
-function savePickUpAddress($default_data, $data, $url){
+function sendyFulfillmentSavePickUpAddress($default_data, $data, $url){
 
   $save_pickup_address_data = array(
     'api_username' => $default_data['apiusername'],

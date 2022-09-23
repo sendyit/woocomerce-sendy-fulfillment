@@ -15,8 +15,8 @@ echo 'posted data as an array <pre>'.json_encode($data,JSON_PRETTY_PRINT).'</pre
 //return 0;
 require_once '../SendyFulfillment.php';
 
-$FulfillmentProduct = new FulfillmentProduct();
+$SendyFulfillmentProduct = new SendyFulfillmentProduct();
 
-$response = $FulfillmentProduct->track_order($data);
+$response = $SendyFulfillmentProduct->sendy_fulfillment_track_order($data);
 
  print_r($response);

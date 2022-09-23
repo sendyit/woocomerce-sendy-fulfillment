@@ -2,9 +2,9 @@
 
 require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
- add_action( 'save_post', 'process_action' );
+ add_action( 'save_post', 'sendy_fulfillment_process_action' );
 
-function process_action($post_id) {
+function sendy_fulfillment_process_action($post_id) {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
     products.ID as id,
@@ -23,20 +23,20 @@ function process_action($post_id) {
     }
     foreach($results as $row){  
         if ($row->post_status == "trash") {
-            product_archive($row->id);
+            sendy_fulfillment_product_archive($row->id);
         } else if ($row->post_status == "publish" && $product_placement_status[0]->option_value == "1") {
           if (count($edit_status) > 0) {
-            product_edit($row->id);
+            sendy_fulfillment_product_edit($row->id);
           } else {
-            product_add($row->id);
+            sendy_fulfillment_product_add($row->id);
           }
         } else if ($row->post_status == "wc-processing" && $row->post_type == "shop_order" && $order_placement_status[0]->option_value == "1") {
-            order_sync($row->id);
+            sendy_fulfillment_order_sync($row->id);
         }
     }
 }
 
-function product_count() {
+function sendy_fulfillment_product_count() {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
     products.ID as id,
@@ -47,7 +47,7 @@ function product_count() {
     where products.post_type = 'product' and not products.post_title = 'AUTO-DRAFT' and not products.post_status = 'trash'");
     return count($results);
 }
-function synced_product_count() {
+function sendy_fulfillment_synced_product_count() {
   $env = get_option("sendy_fulfillment_environment");
   $meta_key = $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id';
   global $wpdb;
@@ -63,9 +63,9 @@ function synced_product_count() {
   return count($results);
 }
 
-function product_sync ($type) {
+function sendy_fulfillment_product_sync ($type) {
     $env = get_option("sendy_fulfillment_environment");
-    $products = new FulfillmentProduct();
+    $products = new SendyFulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT 
@@ -123,12 +123,12 @@ function product_sync ($type) {
             $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
             $array = (array) $row;
             if ($type ==  'all') {
-              $product_id = $products->edit($array);
+              $product_id = $products->sendy_fulfillment_edit($array);
               array_push($response, $product_id);
             }
           } else {
             $array = (array) $row;
-            $product_id = $products->add($array);
+            $product_id = $products->sendy_fulfillment_add($array);
             if ($product_id['product_id'] != NULL) {
               add_post_meta( $row->id, $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id', $product_id['product_id'], false );
               add_post_meta( $row->id, $env == "Test" ? 'sendy_product_variant_id_test' : 'sendy_product_variant_id', $product_id['product_variant_id'], false );
@@ -141,8 +141,8 @@ function product_sync ($type) {
     }
 }
 
-function product_add ($post_id) {
-    $products = new FulfillmentProduct();
+function sendy_fulfillment_product_add ($post_id) {
+    $products = new SendyFulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT 
@@ -186,7 +186,7 @@ function product_add ($post_id) {
       $env = get_option("sendy_fulfillment_environment");
       if ($row->product_variant_unit_price) {
             $array = (array) $row;
-            $product_id = $products->add($array);
+            $product_id = $products->sendy_fulfillment_add($array);
             add_post_meta( $row->id, $env == "Test" ? 'sendy_product_id_test' : 'sendy_product_id', $product_id['product_id'], false );
             add_post_meta( $row->id, $env == "Test" ? 'sendy_product_variant_id_test' : 'sendy_product_variant_id', $product_id['product_variant_id'], false );
             array_push($response, $product_id);
@@ -194,8 +194,8 @@ function product_add ($post_id) {
     }
 }
 
-function product_edit($post_id) {
-  $products = new FulfillmentProduct();
+function sendy_fulfillment_product_edit($post_id) {
+  $products = new SendyFulfillmentProduct();
   global $wpdb;
   global $woocommerce;
   $results = $wpdb->get_results( "SELECT 
@@ -250,14 +250,14 @@ function product_edit($post_id) {
         $row->product_id = $synced[count($synced) - 1]->meta_value;
         $row->product_variant_id = $synced_variant[count($synced_variant) - 1]->meta_value;
         $array = (array) $row;
-        $product_id = $products->edit($array);
+        $product_id = $products->sendy_fulfillment_edit($array);
         array_push($response, $product_id);
     }
   }
 }
 
-function product_archive($post_id) {
-    $products = new FulfillmentProduct();
+function sendy_fulfillment_product_archive($post_id) {
+    $products = new SendyFulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT 
@@ -279,13 +279,13 @@ function product_archive($post_id) {
       }
       $row->product_id = $synced[count($synced) - 1]->meta_value;
       $array = (array) $row;
-      $product_id = $products->archive($array);
+      $product_id = $products->sendy_fulfillment_archive($array);
       array_push($response, $product_id);
     }
 }
 
-function order_sync ($post_id) {
-    $orders = new FulfillmentProduct();
+function sendy_fulfillment_order_sync ($post_id) {
+    $orders = new SendyFulfillmentProduct();
     global $wpdb;
     global $woocommerce;
     $results = $wpdb->get_results( "SELECT ID
@@ -364,7 +364,7 @@ function order_sync ($post_id) {
         $payload->business_email = $biz_email;
         $payload->products = $products;
         $payload->destination = $destination;
-        $order_id = $orders->place_order($payload);
+        $order_id = $orders->sendy_fulfillment_place_order($payload);
         add_post_meta( $post_id, $env == "Test" ? 'sendy_order_id_test' : 'sendy_order_id', $order_id->fulfilment_requests[0]->fulfilment_request_id, false );
     }
 }

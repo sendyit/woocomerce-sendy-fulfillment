@@ -1,9 +1,9 @@
 <?php
 require_once plugin_dir_path( dirname( __FILE__ ) ) . './sendyAssets/SendyFulfillment.php';
 
-add_action( 'save_post', 'process_order' );
+add_action( 'save_post', 'sendy_fulfillment_process_order' );
 
-function process_order($post_id) {
+function sendy_fulfillment_process_order($post_id) {
     global $wpdb;
     $results = $wpdb->get_results( "SELECT 
     orders.ID as id,
@@ -13,13 +13,13 @@ function process_order($post_id) {
     where orders.ID = $post_id");
     foreach($results as $row){  
         if (($row->post_status == "trash" || $row->post_status == "wc-cancelled") && $row->post_type == "shop_order") {
-            cancel_fulfillment_request($post_id);
+            cancel_sendy_fulfillment_request($post_id);
         }
     }
 }
 
 
-function cancel_fulfillment_request( $order_id ){
+function cancel_sendy_fulfillment_request( $order_id ){
     
     global $wpdb;
 
@@ -43,12 +43,12 @@ function cancel_fulfillment_request( $order_id ){
             $fulfillment_request_id = $row->meta_value;
         }
     }
-    $FulfillmentProduct = new FulfillmentProduct();
+    $SendyFulfillmentProduct = new SendyFulfillmentProduct();
 
     $data = array(
         "order_id"=>$fulfillment_request_id,
         "cancellation_reason"=>"Cancelled on wordpress"
     );
-    $response = $FulfillmentProduct->cancel_order($data);
+    $response = $SendyFulfillmentProduct->sendy_fulfillment_cancel_order($data);
 
 }

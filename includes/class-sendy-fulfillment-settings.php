@@ -67,11 +67,11 @@ function sendy_fulfillment_input_validation( $value, $field, $name ) {
 function sendy_fulfillment_submenu_settings_page()
 {}
 
-function add_pickup_scripts() {
+function sendy_fulfillment_add_pickup_scripts() {
     wp_enqueue_script('ajax-script', plugin_dir_url(__FILE__) . '../scripts/sendy-fulfillment-pickup-locations.js', array('jquery'), '1.0', true);
 }
 
-function savePickUpLocation() {
+function sendyFulfillmentSavePickUpLocation() {
     if (get_option('sendy_fulfillment_pickup_address_name') <> get_option('sendy_fulfillment_pickup_address_name_alt')) {
         $payload = array(
             'description' => get_option('sendy_fulfillment_pickup_address_name'),
@@ -79,8 +79,8 @@ function savePickUpLocation() {
             'latitude' => get_option('sendy_fulfillment_pickup_address_long'),
         );
         $array = (array) $payload;
-        $migrate = new FulfillmentProduct();
-        $business_details = $migrate->save_pickup_address($array);
+        $migrate = new SendyFulfillmentProduct();
+        $business_details = $migrate->sendy_fulfillment_save_pickup_address($array);
         if ($business_details->business) {
             delete_option('sendy_fulfillment_pickup_address_name_alt');
             add_option('sendy_fulfillment_pickup_address_name_alt', $business_details->business->business_default_address->description);
@@ -88,7 +88,7 @@ function savePickUpLocation() {
     }
 }
 
-function migrate_account() {
+function sendy_fulfillment_migrate_account() {
     //migrate account to sales channel
 
     global $woocommerce;
@@ -97,16 +97,16 @@ function migrate_account() {
         'country' => strtoupper(WC()->countries->countries[$WC_Countries->get_base_country()]),
     );
     $array = (array) $payload;
-    $migrate = new FulfillmentProduct();
+    $migrate = new SendyFulfillmentProduct();
     if (get_option('sendy_fulfillment_environment') == 'Test') {
         if (!get_option('sendy_fulfillment_sales_channel_id_test')) {
-            $channel_id = $migrate->migrate_account($array);
+            $channel_id = $migrate->sendy_fulfillment_migrate_user_account($array);
             delete_option('sendy_fulfillment_sales_channel_id_test');
             add_option('sendy_fulfillment_sales_channel_id_test', $channel_id->channel_id);
         }
     } else {
         if (!get_option('sendy_fulfillment_sales_channel_id_live') || get_option('sendy_fulfillment_api_username_live') <> get_option('sendy_fulfillment_api_username')) {
-            $channel_id = $migrate->migrate_account($array);
+            $channel_id = $migrate->sendy_fulfillment_migrate_user_account($array);
             delete_option('sendy_fulfillment_sales_channel_id_live');
             delete_option('sendy_fulfillment_api_username');
             add_option('sendy_fulfillment_sales_channel_id_live', $channel_id->channel_id);
@@ -202,7 +202,7 @@ You can use any business name but we advise you to use the same name as on the S
             <?php
                 do_settings_sections('plugin-api-settings');
                 if (get_option('sendy_fulfillment_api_username_live')) {
-                    migrate_account();
+                    sendy_fulfillment_migrate_account();
                 }
             ?>
             <table class="form-table">
@@ -329,20 +329,20 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 
   <?php
     if (isset($_POST['sync_all_products'])) {
-        product_sync('all');
+        sendy_fulfillment_product_sync('all');
     }
     if (isset($_POST['sync_remaining_products'])) {
-        product_sync('remaining');
+        sendy_fulfillment_product_sync('remaining');
     }
     
   ?>
   <p style="margin-left: 20px;">
       <?php 
-    if (synced_product_count() <> product_count()) {
-        echo 'You have synced ' . synced_product_count() . '/' . product_count() . ' products';
-    } else if (synced_product_count() == product_count() && product_count() <> 0) {
-        echo 'You have synced all ' . product_count() . ' products';
-    } else if (synced_product_count() <> product_count() && synced_product_count() == 0) {
+    if (sendy_fulfillment_synced_product_count() <> sendy_fulfillment_product_count()) {
+        echo 'You have synced ' . sendy_fulfillment_synced_product_count() . '/' . sendy_fulfillment_product_count() . ' products';
+    } else if (sendy_fulfillment_synced_product_count() == sendy_fulfillment_product_count() && sendy_fulfillment_product_count() <> 0) {
+        echo 'You have synced all ' . sendy_fulfillment_product_count() . ' products';
+    } else if (sendy_fulfillment_synced_product_count() <> sendy_fulfillment_product_count() && sendy_fulfillment_synced_product_count() == 0) {
         echo 'You haven`t synced your products';
     }
     ?>
@@ -353,7 +353,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
     <input class="button button-sucess" style="display: none;" id="sync_all_products_hidden" type="submit" name="sync_all_products" value="Sync all products">
   </form>
   <?php
-  if (synced_product_count() <> product_count() && synced_product_count() <> 0) {
+  if (sendy_fulfillment_synced_product_count() <> sendy_fulfillment_product_count() && sendy_fulfillment_product_count() <> 0) {
     ?>
         <form method="post">
             <input class="button button-sucess" type="button" id="sync_remaining_products" onclick="document.getElementById('sync_remaining_products').value = 'Syncing Remaining Products Only'; document.getElementById('sync_remaining_products').setAttribute('disabled', ''); document.getElementById('sync_remaining_products_hidden').click();" value="Sync Remaining Products Only">
@@ -375,8 +375,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
     <?php settings_fields('order-settings'); ?>
     <?php do_settings_sections('order-settings'); ?>
     <?php 
-        add_pickup_scripts();
-        savePickUpLocation();
+        sendy_fulfillment_add_pickup_scripts();
+        sendyFulfillmentSavePickUpLocation();
     ?>
     <table class="form-table">
         <tr valign="top">

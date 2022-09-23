@@ -1,6 +1,6 @@
 <?
 
-function CancelOrder($default_data, $data, $url){
+function sendyFulfillmentCancelOrder($default_data, $data, $url){
 
   $cancel_order_data = array(
     'api_username' => $default_data['apiusername'],
