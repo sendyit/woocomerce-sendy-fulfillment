@@ -163,15 +163,15 @@ function sendy_fulfillment_settings_page()
     <?php
     if (isset($_GET))
     {
-        $active_tab = $_GET['tab'];
+        $active_tab = sanitize_key($_GET['tab']);
     }
     if( strlen($active_tab) < 2 ) { $active_tab = 'general';}
 ?>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"> API Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"> API Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
         </h2>
         <?php if ($active_tab == 'general')
     { ?>
@@ -214,23 +214,6 @@ You can use any business name but we advise you to use the same name as on the S
                     <td style="width:100px;" scope="row">Business Email</td>
                     <td><input class="sendy-custom-input" type="text" id="sendy_fulfillment_biz_email" name="sendy_fulfillment_biz_email" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_email')); ?>" /></td>
                 </tr>
-                <!-- <tr valign="top">
-                <td scope="row">API Key</td>
-                <td><input class="sendy-custom-input" readonly type="text" name="sendy_fulfillment_api_key" value="<?php
-
-                if(get_option('sendy_fulfillment_environment') == 'Live')
-                {
-                  echo get_option('sendy_fulfillment_api_key_live');
-
-                }
-                else
-                {
-                   echo get_option('sendy_fulfillment_api_key_test');
-                }
-
-
-                 ?>" /></td>
-                </tr> -->
 
                 <tr valign="top">
                 <td scope="row">API Username</td>
