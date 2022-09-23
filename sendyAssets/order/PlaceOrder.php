@@ -1,7 +1,7 @@
 
 <?
 
-function PlaceOrder($default_data, $data, $url){
+function sendyFulfillmentPlaceOrder($default_data, $data, $url){
 
   $create_order_data = array(
     'api_username' => $default_data['apiusername'],

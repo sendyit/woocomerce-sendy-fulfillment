@@ -1,6 +1,6 @@
 <?php
 
-function UnlinkProduct($default_data, $data, $url) {
+function sendyFulfillmentUnlinkProduct($default_data, $data, $url) {
 
     $unlink_channel_product_data = array(
         'api_username' => $default_data['apiusername'],

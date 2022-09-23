@@ -2,9 +2,9 @@
 
 
 
-function EditProduct($default_data, $data, $url) {
+function sendyFulfillmentEditProduct($default_data, $data, $url) {
 
-    $quantity_data = clean_up_quantity($data['product_variant_quantity_type']);
+    $quantity_data = sendy_fulfillment_clean_up_quantity($data['product_variant_quantity_type']);
 
     $edit_channel_product_data = array(
         'api_username' => $default_data['apiusername'],
