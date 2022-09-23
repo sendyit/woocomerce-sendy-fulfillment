@@ -7,12 +7,17 @@
 
         global $wpdb;
 
-        $results = $wpdb->get_results( "SELECT
+        $results = $wpdb->get_results(
+          $wpdb->prepare(
+            "SELECT
                 orders.meta_id as id,
                 orders.meta_key,
                 orders.meta_value
                 FROM {$wpdb->postmeta} orders
-                where orders.post_id = $order_id");
+                where orders.post_id = %d",
+                $order_id
+            )
+          );
         $env = get_option("sendy_fulfillment_environment");
         $order_id = "";
         if ($env == "Test") {
