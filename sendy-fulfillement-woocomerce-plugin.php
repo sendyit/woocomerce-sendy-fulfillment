@@ -8,7 +8,7 @@ Plugin URI: https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin
 
 Description: Plugin to allow automation of consignment and delivery with Sendy Fulfillment.
 
-Version: 1.0.0
+Version: 2.0.0
 
 Author: Sendy Engineering
 
@@ -45,6 +45,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-settings
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-inventory.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-location.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-tracking.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-sendy-fulfillment-orders.php';
 
 
 /**

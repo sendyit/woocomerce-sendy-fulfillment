@@ -1,10 +1,10 @@
 # Sendy Fulfillment WooCommerce Plugin
 Contributors: Evanson, Lewis , Dervine
 Tags: WooCommerce, ECommerce, Consignment, Delivery, Sendy , Fulfillment
-Requires at least: 5.7
-Tested up to: 6.0
-Stable tag: 5.3
-Requires PHP: 7.0
+Requires at least: 5.8.3
+Tested up to: 6.0.1
+Stable tag: 2.0.0
+Requires PHP: 7.3.29
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Plugin Url : https://github.com/sendyit/woocomerce-sendy-fulfillment
@@ -50,3 +50,11 @@ Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the 
 - Sync your products from your woocommerce store to the Sendy Fulfillment app, also adds ***sendy_product_id*** to your product metadata
 - Create a Fulfilment request on checkout
 - Add a delivery tracking button to the order confirmation page
+
+**2.0.0 (2022-09-20)**
+- Cancel deliveries on sendy
+- Create a sales channel for businesses
+- Create a Fulfilment request on a sales channel
+- Create pick up request if stock is low
+- Save pick up address
+- Add business email for error and success notifications
