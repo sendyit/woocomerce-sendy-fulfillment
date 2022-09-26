@@ -163,15 +163,15 @@ function sendy_fulfillment_settings_page()
     <?php
     if (isset($_GET))
     {
-        $active_tab = $_GET['tab'];
+        $active_tab = sanitize_key($_GET['tab']);
     }
     if( strlen($active_tab) < 2 ) { $active_tab = 'general';}
 ?>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"> API Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders Settings</a>
-            <a href="?page=<?php echo $_GET['page']; ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"> API Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=inventory" class="nav-tab <?php echo $active_tab == 'inventory' ? 'nav-tab-active' : ''; ?>">Inventory Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=orders" class="nav-tab <?php echo $active_tab == 'orders' ? 'nav-tab-active' : ''; ?>">Orders Settings</a>
+            <a href="?page=<?php echo esc_html($_GET['page']); ?>&tab=Faqs" class="nav-tab <?php echo $active_tab == 'Faqs' ? 'nav-tab-active' : ''; ?>">Faqs</a>
         </h2>
         <?php if ($active_tab == 'general')
     { ?>
@@ -214,23 +214,6 @@ You can use any business name but we advise you to use the same name as on the S
                     <td style="width:100px;" scope="row">Business Email</td>
                     <td><input class="sendy-custom-input" type="text" id="sendy_fulfillment_biz_email" name="sendy_fulfillment_biz_email" value="<?php echo esc_attr(get_option('sendy_fulfillment_biz_email')); ?>" /></td>
                 </tr>
-                <!-- <tr valign="top">
-                <td scope="row">API Key</td>
-                <td><input class="sendy-custom-input" readonly type="text" name="sendy_fulfillment_api_key" value="<?php
-
-                if(get_option('sendy_fulfillment_environment') == 'Live')
-                {
-                  echo get_option('sendy_fulfillment_api_key_live');
-
-                }
-                else
-                {
-                   echo get_option('sendy_fulfillment_api_key_test');
-                }
-
-
-                 ?>" /></td>
-                </tr> -->
 
                 <tr valign="top">
                 <td scope="row">API Username</td>
@@ -281,7 +264,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <td><?php
         $options = get_option( 'sendy_fulfillment_sync_products_on_add' );
         $html = '<input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        echo esc_html($html);?>
         <div class="description-reason"> When this is checked your inventory will synch automatically when you update
         your products </div>
         </td>
@@ -384,7 +367,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <td><?php
         $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );
         $html = '<input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        echo esc_html($html);?>
         <div class="description-reason"> When checked, a fulfillment order will be placed once a customer places
         an order on your e-commerce site </div>
         </td>
@@ -397,7 +380,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <td><?php
         $options = get_option( 'sendy_fulfillment_include_tracking' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        echo esc_html($html);?>
         <div class="description-reason"> When checked tracking link and status will be added to the order received page </div>
         </td>
         </tr>
@@ -407,7 +390,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <td><?php
         $options = get_option( 'sendy_fulfillment_include_collect_amount' );
         $html = '<input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        echo esc_html($html);?>
         <div class="description-reason"> When checked the rider will receive a note indicating the amount to collect from
         the customer </div>
         </td>
@@ -427,7 +410,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <td><?php
         $options = get_option( 'sendy_fulfillment_delivery_info' );
         $html = '<textarea class="sendy-custom-input" style="width:500px;" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
-        echo $html;?>
+        echo esc_html($html);?>
         </td>
         </tr>
     </table>
