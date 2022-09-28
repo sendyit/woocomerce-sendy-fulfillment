@@ -72,7 +72,7 @@ function sendy_fulfillment_add_pickup_scripts() {
 }
 
 function sendyFulfillmentSavePickUpLocation() {
-    if (get_option('sendy_fulfillment_pickup_address_name') <> get_option('sendy_fulfillment_pickup_address_name_alt')) {
+    if (get_option('sendy_fulfillment_pickup_address_name') <> get_option('sendy_fulfillment_pickup_address_name_alt') && get_option('sendy_fulfillment_environment') == 'Live') {
         $payload = array(
             'description' => get_option('sendy_fulfillment_pickup_address_name'),
             'longitude' => get_option('sendy_fulfillment_pickup_address_lat'),
