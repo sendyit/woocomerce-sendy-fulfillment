@@ -18,8 +18,8 @@ class Sendy_Fulfillment_Activator {
 
 		//preset the api and apiusername
 
-		add_option('sendy_fulfillment_api_key_live', 'znHfpVDE4uGwGSJNNeKKQsbMDynz3thXu7Q7znY4ZgmtcU3h2cCa7yEZfZty');
-		add_option('sendy_fulfillment_api_key_test','uTvdcS6TGU3DyvpfK2pWNh53W9vMrE');
+		add_option('sendy_fulfillment_api_key_live', 'rjkGbbmhK8NVKPZdqXhMFbrwB2uAAsqfbPrnXFRCfEXeFmderkBzFWVJYnrU');
+		add_option('sendy_fulfillment_api_key_test','G4fYU5vxb5D2MxakGJU5wSMDU9PVXa');
 		add_option('sendy_fulfillment_api_username_test','B-IGY-3791');
 
 	}
