@@ -262,9 +262,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <tr valign="top">
         <td style="width:200px;" scope="row">Sync Products On Change</td>
         <td><?php
-        $options = get_option( 'sendy_fulfillment_sync_products_on_add' );
-        $html = '<input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        $options = get_option( 'sendy_fulfillment_sync_products_on_add' );?>
+        <input type="checkbox" id="sendy_fulfillment_sync_products_on_add" name="sendy_fulfillment_sync_products_on_add" value="1" <?php echo esc_html(checked( 1, $options, false ))?>/>
         <div class="description-reason"> When this is checked your inventory will synch automatically when you update
         your products </div>
         </td>
@@ -365,9 +364,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <tr valign="top">
         <td style="width:200px;" scope="row">Place Order On Fulfillment </td>
         <td><?php
-        $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );
-        $html = '<input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        $options = get_option( 'sendy_fulfillment_place_order_on_fulfillment' );?>
+        <input type="checkbox" id="sendy_fulfillment_place_order_on_fulfillment" name="sendy_fulfillment_place_order_on_fulfillment" value="1" <?php echo esc_html(checked( 1, $options, false ))?>/>
         <div class="description-reason"> When checked, a fulfillment order will be placed once a customer places
         an order on your e-commerce site </div>
         </td>
@@ -378,9 +376,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <tr valign="top">
         <td scope="row">Include Tracking Link & Status</td>
         <td><?php
-        $options = get_option( 'sendy_fulfillment_include_tracking' );
-        $html = '<input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        $options = get_option( 'sendy_fulfillment_include_tracking' );?>
+        <input type="checkbox" id="sendy_fulfillment_include_tracking" name="sendy_fulfillment_include_tracking" value="1" <?php echo esc_html(checked( 1, $options, false ))?>/>
         <div class="description-reason"> When checked tracking link and status will be added to the order received page </div>
         </td>
         </tr>
@@ -388,9 +385,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <tr valign="top">
         <td scope="row">Include Collect Amount</td>
         <td><?php
-        $options = get_option( 'sendy_fulfillment_include_collect_amount' );
-        $html = '<input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1"' . checked( 1, $options, false ) . '/>';
-        echo $html;?>
+        $options = get_option( 'sendy_fulfillment_include_collect_amount' );?>
+        <input type="checkbox" id="sendy_fulfillment_include_collect_amount" name="sendy_fulfillment_include_collect_amount" value="1" <?php echo esc_html(checked( 1, $options, false ))?>/>
         <div class="description-reason"> When checked the rider will receive a note indicating the amount to collect from
         the customer </div>
         </td>
@@ -408,9 +404,8 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
         <tr valign="top">
         <td scope="row">Additional Delivery Info (optional) </td>
         <td><?php
-        $options = get_option( 'sendy_fulfillment_delivery_info' );
-        $html = '<textarea class="sendy-custom-input" style="width:500px;" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info"' . $options . '>'. $options .'</textarea>';
-        echo $html;?>
+        $options = get_option( 'sendy_fulfillment_delivery_info' );?>
+        <textarea class="sendy-custom-input" style="width:500px" id="sendy_fulfillment_delivery_info" name="sendy_fulfillment_delivery_info" <?php echo esc_html($options)?>><?php echo esc_html($options) ?></textarea>
         </td>
         </tr>
     </table>
