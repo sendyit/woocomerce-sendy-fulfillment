@@ -417,7 +417,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 <hr>
 <p class="lower-info-section">  </p>
             <?php
-    } elseif ($active_tab == 'Faqs'){  include_once 'pages/faq.php'; }
+    } elseif ($active_tab == 'Faqs' || $active_tab == 'faqs'){  include_once 'pages/faq.php'; }
 ?>
 
 
