@@ -19,6 +19,7 @@ class Sendy_Fulfillment_Activator {
 		//preset the api and apiusername
 
 		add_option('sendy_fulfillment_api_key_live', 'rjkGbbmhK8NVKPZdqXhMFbrwB2uAAsqfbPrnXFRCfEXeFmderkBzFWVJYnrU');
+		add_option('sendy_fulfillment_sales_channel_id_test', 'SC-YLX-4425');
 		add_option('sendy_fulfillment_api_key_test','G4fYU5vxb5D2MxakGJU5wSMDU9PVXa');
 		add_option('sendy_fulfillment_api_username_test','B-IGY-3791');
 
