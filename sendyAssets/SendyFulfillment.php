@@ -26,6 +26,7 @@ Class SendyFulfillmentProduct {
         $this->default_data['staging_api_link'] = 'https://fulfillment-api-test.sendyit.com/v2';
         $this->default_data['live_tracking_link'] = 'https://buyer.sendyit.com';
         $this->default_data['staging_tracking_link'] = 'https://buyer-test.sendyit.com';
+        $this->default_data['migration'] = (get_option('sendy_fulfillment_environment') == 'Test' && get_option('sendy_fulfillment_sales_channel_id_test')) || (get_option('sendy_fulfillment_environment') == 'Live' && get_option('sendy_fulfillment_sales_channel_id_live'));
     }
     function sendy_fulfillment_get_apiusername() {
         if (get_option('sendy_fulfillment_environment') == 'Live') {
@@ -78,33 +79,45 @@ Class SendyFulfillmentProduct {
     public function sendy_fulfillment_add($data) {
         $url = $this->sendy_fulfillment_get_link('add-product');
         $product_details_url = $this->sendy_fulfillment_get_link('product-details');
-        $response = sendyFulfillmentAddProduct($this->default_data, $data, $url, $product_details_url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentAddProduct($this->default_data, $data, $url, $product_details_url);
+            return $response;
+        }
     }
     public function sendy_fulfillment_edit($data) {
         $url = $this->sendy_fulfillment_get_link('edit-product');
-        $response = sendyFulfillmentEditProduct($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentEditProduct($this->default_data, $data, $url);
+            return $response;
+        }
     }
     public function sendy_fulfillment_archive($data) {
         $url = $this->sendy_fulfillment_get_link('unlink-product');
-        $response = sendyFulfillmentUnlinkProduct($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentUnlinkProduct($this->default_data, $data, $url);
+            return $response;
+        }
     }
     function sendy_fulfillment_place_order($data) {
         $url = $this->sendy_fulfillment_get_link('create-fulfilment-request');
-        $response = sendyFulfillmentPlaceOrder($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentPlaceOrder($this->default_data, $data, $url);
+            return $response;
+        }
     }
     function sendy_fulfillment_track_order($data) {
         $url = $this->sendy_fulfillment_get_link('track-order');
-        $response = sendyFulfillmentTrackOrder($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentTrackOrder($this->default_data, $data, $url);
+            return $response;
+        }
     }
     function sendy_fulfillment_cancel_order($data) {
         $url = $this->sendy_fulfillment_get_link('cancel-order');
-        $response = sendyFulfillmentCancelOrder($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentCancelOrder($this->default_data, $data, $url);
+            return $response;
+        }
     }
     function sendy_fulfillment_migrate_user_account($data) {
         $url = $this->sendy_fulfillment_get_link('saleschannel-migrate');
@@ -113,8 +126,10 @@ Class SendyFulfillmentProduct {
     }
     function sendy_fulfillment_save_pickup_address($data) {
         $url = $this->sendy_fulfillment_get_link('pickup-address');
-        $response = sendyFulfillmentSavePickUpAddress($this->default_data, $data, $url);
-        return $response;
+        if ($this->default_data['migration']) {
+            $response = sendyFulfillmentSavePickUpAddress($this->default_data, $data, $url);
+            return $response;
+        }
     }
     function sendy_fulfillment_test_settings($data) {
         $includedStuff = get_included_files();
