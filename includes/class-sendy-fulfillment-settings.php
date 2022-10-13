@@ -310,11 +310,20 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 </div>
 
   <?php
+  $migration = (get_option('sendy_fulfillment_environment') == 'Test' && get_option('sendy_fulfillment_sales_channel_id_test')) || (get_option('sendy_fulfillment_environment') == 'Live' && get_option('sendy_fulfillment_sales_channel_id_live'));
     if (isset($_POST['sync_all_products'])) {
-        sendy_fulfillment_product_sync('all');
+        if ($migration) {
+            sendy_fulfillment_product_sync('all');
+        } else {
+            echo '<script>alert("Looks like your account has not been migrated to a sales channel. Kindly enter your API username in the API settings page and click on save.")</script>';
+        }
     }
     if (isset($_POST['sync_remaining_products'])) {
-        sendy_fulfillment_product_sync('remaining');
+        if ($migration) {
+            sendy_fulfillment_product_sync('remaining');
+        } else {
+            echo '<script>alert("Looks like your account has not been migrated to a sales channel. Kindly enter your API username in the API settings page and click on save.")</script>';
+        }
     }
     
   ?>
