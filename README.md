@@ -2,8 +2,8 @@
 Contributors: Evanson, Lewis , Dervine
 Tags: WooCommerce, ECommerce, Consignment, Delivery, Sendy , Fulfillment
 Requires at least: 5.8.3
-Tested up to: 6.0.1
-Stable tag: 2.0.0
+Tested up to: 6.0.3
+Stable tag: 2.0.1
 Requires PHP: 7.3.29
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,13 +21,13 @@ This WooCommerce extension uses the Sendy Fulfilment API  to allow you to automa
 
 ## Installation
 ### Minimum requirements
-- Wordpress 5.8.3
-- Woocommerce 6.1.0
+- Wordpress 6.0.0
+- Woocommerce 6.8.0
 
 ### Other prerequisites:
 - You need to have a Sendy Fulfilment account. If you don’t have one, you can sign-up [here](https://fulfillment.sendyit.com/auth/sign-up)
 - A Sendy Fulfilment API key. 
-- The API key is a unique identifier for your business, you can get one by sending an email to merchantapi@sendyit.com
+- The API key is a unique identifier for your business, you can get one by sending an email to merchantapi@sendyit.com. Please store this securely for the live environment as it's exposure might allow someone else to place requests with your account.
 
 Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the  products are synced and then consign your items to the Sendy fulfilment centres
 
@@ -58,3 +58,6 @@ Once you’ve installed the plugin, open the Sendy Fulfilment app to ensure the 
 - Create pick up request if stock is low
 - Save pick up address
 - Add business email for error and success notifications
+
+**2.0.1 (2022-11-01)**
+- Use woocommerce default currency

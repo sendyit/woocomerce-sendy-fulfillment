@@ -271,14 +271,7 @@ During delivery and pickup, Sendy Fulfilment needs to know the product weight or
 
         <tr valign="top">
         <td scope="row">Default Currency</td>
-        <td>
-                    <?php
-                        $options = get_option( 'sendy_fulfillment_default_currency' );
-                    ?>
-                    <select class="sendy-custom-input" name='sendy_fulfillment_default_currency'>
-                        <option value='KES' <?php selected( $options, 'KES' ); ?>>KES</option>
-                    </select>
-                </td>
+        <td><input disabled type="text" class="sendy-custom-input" id="sendy_fulfillment_default_currency" name="sendy_fulfillment_default_currency" value="<?php echo esc_attr(get_option('woocommerce_currency')); ?>" /></td>
         </tr>
 
         <tr valign="top">
