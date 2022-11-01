@@ -19,7 +19,7 @@ Class SendyFulfillmentProduct {
         $this->default_data['channel_id'] = $this->sendy_fulfillment_get_saleschannelid();
         $this->default_data['default_quantity'] = get_option('sendy_fulfillment_default_quantity', 1);
         $this->default_data['default_quantity_type'] = get_option('sendy_fulfillment_default_quantity_type', 'KILOGRAMS');
-        $this->default_data['default_currency'] = get_option('sendy_fulfillment_default_currency', 'KES'); //defaulting to KES
+        $this->default_data['default_currency'] = get_option('woocommerce_currency', 'KES'); //defaulting to KES
         $this->default_data['environment'] = get_option('sendy_fulfillment_environment');
         $this->default_data['default_means_of_payment'] = 'MPESA'; //currently defaulting to mpesa
         $this->default_data['live_api_link'] = 'https://fulfillment-api.sendyit.com/v2';

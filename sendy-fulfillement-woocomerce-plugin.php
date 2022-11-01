@@ -8,7 +8,7 @@ Plugin URI: https://gitlab.com/sendy/sendy-fulfillement-woocomerce-plugin
 
 Description: Plugin to allow automation of consignment and delivery with Sendy Fulfillment.
 
-Version: 2.0.0
+Version: 2.0.1
 
 Author: Sendy Engineering
 
@@ -23,7 +23,7 @@ if (!defined('WPINC')) {
     die;
 }
 
-define('SENDY_FULFILLMENT_WOOCOMMERCE_VERSION', '1.0.0');
+define('SENDY_FULFILLMENT_WOOCOMMERCE_VERSION', '2.0.1');
 
 function activate_sendy_fulfillment()
 {

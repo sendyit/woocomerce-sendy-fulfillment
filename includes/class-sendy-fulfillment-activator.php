@@ -8,7 +8,6 @@ class Sendy_Fulfillment_Activator {
 
 		//set the default settings
 		add_option('sendy_fulfillment_environment', 'Test');
-		add_option('sendy_fulfillment_default_currency', 'KES');
 		add_option('sendy_fulfillment_default_quantity_type', 'KILOGRAM');
 		add_option('sendy_fulfillment_default_quantity', '1');
 		add_option('sendy_fulfillment_sync_products_on_add', '1');
