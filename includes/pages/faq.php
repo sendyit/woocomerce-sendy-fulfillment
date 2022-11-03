@@ -95,5 +95,27 @@ and we can help you resolve this.
     </ul>
         <hr/>
 
+    <h1> I just activated the plugin but my orders are not being created</h1>
+      <ul><li>
+        If you have just installed the plugin, navigate to the settings page ->
+        <a href="<?php echo get_site_url();?>/wp-admin/admin.php?page=sendy-fulfillment&tab=general" >
+          Settings  </a>.
+        Enter your business details and save the changes.
+
+      </li>
+      <li>
+      Proceed to the Inventory Settings page ->
+        <a href="<?php echo get_site_url();?>/wp-admin/admin.php?page=sendy-fulfillment&tab=inventory" >
+          Inventory Settings  </a>.
+        Click on `Sync All Products` button to sync your store's products to Sendy Fulfillment.
+      </li>
+      <li>
+      You are now ready to create orders!
+      </li>
+
+
+    </ul>
+        <hr/>
+
 
  </div>
